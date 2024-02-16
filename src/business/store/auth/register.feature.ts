@@ -1,4 +1,4 @@
-import { IinputValueRegister } from "../../../types/interface/register.interface"
+import { IinputValueRegister } from "../../../common/types/interface/register.interface"
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { ReduxState } from "../store"
 

@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Checkbox, Input } from "antd";
 import { useDispatch } from "react-redux";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
-import SignInButton from "../../signinButton";
+import SignInButton from "../../../common/components/elements/buttons/signinButton";
 
 type Props = {};
 
@@ -119,10 +119,10 @@ function LoginPage({}: Props) {
       <div className="">
         <div className="flex justify-center mt-[50px]">
           <Image
-            src=""
+            src="account_circle.svg"
             alt=""
-            width={100}
-            height={100}
+            width={130}
+            height={130}
           />
         </div>
 
@@ -210,19 +210,19 @@ function LoginPage({}: Props) {
             <div className="mt-[20px]">
               <SignInButton buttonType="submit" textButton="Login" />
             </div>
-{/* 
+
             <div className="flex justify-center mt-5 ">
               <p className="pr-2">Don’t have an account?</p>
               <p
                 className="text-green-700 hover:border-b hover:border-green-700 cursor-pointer"
                 onClick={() => {
-                  router.push("/auth/register/account");
+                  // router.push("/auth/register/account");
                 }}
               >
                 Sign up
               </p>
               <p className="pl-2">here</p>
-            </div> */}
+            </div>
 
             
           {/* </form> */}
