@@ -8,7 +8,6 @@ interface ComponentProps {
 }
 
 const SignInButton = ({ onClick, textButton, buttonType }: ComponentProps) => {
-
   const [isHovered, setIsHovered] = useState(false);
   const buttonStyles = {
     backgroundColor: isHovered ? '#791E1E' : '#A93F3F',

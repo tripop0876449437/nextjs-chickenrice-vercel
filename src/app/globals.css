@@ -10,10 +10,15 @@
 
 :root {
   --foreground-rgb: 0, 0, 0;
-
-  
 } 
 
-
-
-
+.custom-pagination .ant-pagination-item-active a {
+  color: red !important;
+  border-color: red !important;
+}
+.custom-pagination .ant-pagination-item-active {
+  border-color: red !important;
+}
+.cancel-button:hover {
+  border-color: #FF0000;
+}

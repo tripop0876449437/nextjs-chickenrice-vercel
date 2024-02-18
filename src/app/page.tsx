@@ -1,17 +1,17 @@
 import Input from "antd/es/input/Input";
 import LoginPage from "./auth/login/page";
-import Header from "@/common/components/elements/templates/Header";
+import Header from "@/common/components/elements/templatess/Header";
 import React, { useState } from "react";
 import Image from "next/image";
 
 type Props = {};
 
-export default async function IndexSSPage({}: Props) {
-  //  return (
+export default async function IndexSSPage({ }: Props) {
+  // return (
   //   <>
-  //     <Header/>
+  //     <Header />
 
-  //    <div className="flex justify-end items-end mr-28 gap-10">
+  //     <div className="flex justify-end items-end mr-28 gap-10">
   //       <div className=" ">กำลังใช้งาน</div>
 
   //       <div className=" ">ว่าง</div>
@@ -29,11 +29,11 @@ export default async function IndexSSPage({}: Props) {
   //       <div className="border border-red-400">A6</div>
   //       <div className="border border-red-400">A7</div>
   //       <div className="border border-red-400 text-[40px] bg-yellow-200 flex items-center justify-center">
-  //        <span className="">+</span>
-  //         </div>
+  //         <span className="">+</span>
+  //       </div>
   //     </div>
 
-  //    </>
+  //   </>
 
   // );
 
@@ -62,7 +62,7 @@ export default async function IndexSSPage({}: Props) {
   //         <Image src="account_circle.svg" alt="" width={20} height={20} />
   //         <div className="text-2xl">ซื้อกลับบ้าน</div>
   //       </div>
- 
+
   //       <div className="border border-red-500 flex flex-col items-center justify-center">
   //         <Image src="account_circle.svg" alt="" width={20} height={20} />
   //         <div className="text-2xl">ออร์เดอร์วันนี้</div>
@@ -94,16 +94,16 @@ export default async function IndexSSPage({}: Props) {
   //       <div className="border border-red-400">A6</div>
   //       <div className="border border-red-400">A7</div>
   //       <div className="border border-red-400 text-[40px] bg-yellow-200 flex items-center justify-center">
-  //        <span className="">+</span>
-  //         </div>
+  //         <span className="">+</span>
+  //       </div>
   //     </div>
-
   //   </main>
   // );
-return(
-  <main>
-    <Header/>
-    {/* <LoginPage/> */}
-  </main>
-)
+
+  return(
+    <main>
+      <Header/>
+      {/* <LoginPage/> */}
+    </main>
+  )
 }
