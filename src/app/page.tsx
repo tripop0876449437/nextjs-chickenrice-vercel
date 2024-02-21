@@ -3,13 +3,13 @@ import LoginPage from "./auth/login/page";
 import Header from "@/common/components/elements/templatess/Header";
 import React, { useState } from "react";
 import Image from "next/image";
-import Menulist from "@/common/components/elements/templates/Menulist";
+import Menulist from "@/common/components/elements/templatess/Menulist";
 import Menubutton from "@/common/components/elements/buttons/Menubutton";
 import MenuselectbuttonProp from "@/common/components/elements/buttons/Menubutton";
 
 type Props = {};
 
-export default async function IndexSSPage({ }: Props) {
+export default async function IndexSSPage({}: Props) {
   // // return (
   // //   <>
   // //     <Header />
@@ -72,7 +72,6 @@ export default async function IndexSSPage({ }: Props) {
   // //       </div>
   // //     </div>
 
-
   // //     <div className="flex flex-cols gap-3 justify-end items-end mr-20 mt-3">
   // //       <div className="ml-10 flex gap-3 ">
   // //         <Image src="account_circle.svg" alt="" width={30} height={30} />
@@ -104,18 +103,25 @@ export default async function IndexSSPage({ }: Props) {
   // // );
   // const Menulist = (props: Props) => {
   //   const [selectMenu, setSelectMenu] = useState<string>("หน้าร้าน");
-  
+
   //   const handlerMenu = (menuText: string) => {
   //     setSelectMenu(menuText);
   //   };
-  
-  return(
-    <main>
-      <Menulist/>
-      {/* <Header/> */}
-      {/* <LoginPage/> */}
 
-      {/* <div className="flex flex-cols mt-5 justify-between">
+  return(
+  <main>
+  {
+     <Menulist/> 
+  }
+  {
+    //  <Header/> 
+  }
+  {
+    /* <LoginPage/> */
+  }
+
+  {
+    /* <div className="flex flex-cols mt-5 justify-between">
         <div className="text-2xl text-green-500 ml-4">โต๊ะ1</div>
         <div className="text-2xl text-blue-700">ย้อนกลับ</div>
       </div>
@@ -152,9 +158,11 @@ export default async function IndexSSPage({ }: Props) {
               CHECK BILL
             </button>
           </div>
-        </div> */}
+        </div> */
+  }
 
-        {/* <div className="w-[150px]">
+  {
+    /* <div className="w-[150px]">
           <MenuselectbuttonProp
             menuText="เมนูทั้งหมด"
             isActive={selectMenu === "เมนูทั้งหมด"}
@@ -170,8 +178,10 @@ export default async function IndexSSPage({ }: Props) {
             isActive={selectMenu === "เครื่องดื่ม"}
             onClick={() => handlerMenu("เครื่องดื่ม")}
           />
-        </div> */}
-        {/* <div className="grid grid-cols w-[700px] mt-3">
+        </div> */
+  }
+  {
+    /* <div className="grid grid-cols w-[700px] mt-3">
         <div className="border border-red-600 h-[30px]"> 
           <div>Search</div>
         </div>
@@ -189,9 +199,14 @@ export default async function IndexSSPage({ }: Props) {
           </div>
 
         </div>
-        </div> */}
-      {/* </div> */}
-    </main>
-    )
+        </div> */
   }
+  {
+    /* </div> */
+  }
+   </main>
+  )
 
+  
+  
+}

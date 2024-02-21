@@ -11,6 +11,7 @@ import Menubutton from "../buttons/Menubutton";
 import MenuselectbuttonProp from "../buttons/Menubutton";
 import { Input } from "antd";
 import InStoreTableList from "../bodyContent/InStoreTableList";
+import SearchBar from "../search/searchmenu";
 
 type Props = {};
 
@@ -21,6 +22,9 @@ const Menulist = (props: Props) => {
     setSelectMenu(menuText);
   };
 
+  const handleSearch = (query: any) => {
+    console.log("", query);
+  };
   return (
     <main className="h-screen" style={{ padding: "80px" }}>
       {/* Header */}
@@ -105,7 +109,7 @@ const Menulist = (props: Props) => {
               <div>จำนวน</div>
               <div className="">รวม</div>
             </div>
-            <div className="border border-black  ml-5 mr-10"></div>          
+            <div className="border border-black  ml-5 mr-10"></div>
           </div>
 
           <div className="border border-gray-200 mt-5 w-full h-[40px] bg-gray-300 justify-center items-center flex cursor-pointer">
@@ -140,10 +144,10 @@ const Menulist = (props: Props) => {
           />
         </div>
 
-
         <div className="grid grid-cols w-[700px] mt-3 mr-3">
           <div className="h-[50px]">
-          <Input alt="Search" width={190} height={30} className="border border-red-500" />
+            {/* <Input alt="Search" width={190} height={30} className="border border-red-500" /> */}
+            <SearchBar onSubmit={handleSearch} />
           </div>
 
           <div className="h-[400px] cursor-pointer">
@@ -187,7 +191,6 @@ const Menulist = (props: Props) => {
               </div>
             </div>
           </div>
-
         </div>
       </div>
     </main>
