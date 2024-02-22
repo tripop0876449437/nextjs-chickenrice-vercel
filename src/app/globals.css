@@ -12,6 +12,10 @@
   --foreground-rgb: 0, 0, 0;
 } 
 
+body {
+  font-family: 'Inter', sans-serif;
+}
+
 .custom-pagination .ant-pagination-item-active a {
   color: red !important;
   border-color: red !important;
@@ -21,4 +25,7 @@
 }
 .cancel-button:hover {
   border-color: #FF0000;
+}
+.no-border-radius-modal .ant-modal-content {
+  border-radius: 0;
 }

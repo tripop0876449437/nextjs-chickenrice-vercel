@@ -65,8 +65,6 @@ const TableNameModel: React.FC<ModalProps> = ({ visible, tableName, onClose }) =
         >
           <span style={{ fontSize: '18px', fontWeight: 'bold', color: '#00BE2A' }}>ยืนยัน</span>
         </Button>
-
-
         {/* Modal for the selected table name */}
         <Modal
           // title={`Table ${selectedTableName}`} // Use the selected table name as the modal title
@@ -123,7 +121,6 @@ const TableNameModel: React.FC<ModalProps> = ({ visible, tableName, onClose }) =
             </div>
           </div>
         </Modal>
-
       </div>
     </Modal>
   );

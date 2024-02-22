@@ -6,22 +6,22 @@
       {
         "id": 1,
         "menu_name": "ข้าวมันไก่ต้มธรรมดา",
-        "menu_url": "/picture/ข้าวมันไก่ต้มธรรมดา.jpg"
+        "menu_url": "./picture/ข้าวมันไก่ต้มธรรมดา.jpg"
       },
       {
         "id": 2,
         "menu_name": "ข้าวมันไก่ต้มพิเศษ",
-        "menu_url": "/picture/ข้าวมันไก่ต้มพิเศษ.jpg"
+        "menu_url": "./picture/ข้าวมันไก่ต้มพิเศษ.jpg"
       },
       {
         "id": 3,
         "menu_name": "ข้าวมันไก่ทอดธรรมดา",
-        "menu_url": "/picture/ข้าวมันไก่ทอดธรรมดา.jpg"
+        "menu_url": "./picture/ข้าวมันไก่ทอดธรรมดา.jpg"
       },
       {
         "id": 4,
         "menu_name": "ข้าวมันไก่ทอดพิเศษ",
-        "menu_url": "/picture/ข้าวมันไก่ทอดพิเศษ.jpg"
+        "menu_url": "./picture/ข้าวมันไก่ทอดพิเศษ.jpg"
       }
     ]
   }
