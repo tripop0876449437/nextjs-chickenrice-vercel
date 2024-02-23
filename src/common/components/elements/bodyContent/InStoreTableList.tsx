@@ -34,6 +34,7 @@ const InStoreTableList = () => {
       setCurrentPage(currentPage + 1);
     }
   };
+  
   return (
     <>
       {/* Footer */}

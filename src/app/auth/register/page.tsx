@@ -4,7 +4,6 @@ import { Input, Button } from 'antd';
 import Link from 'next/link';
 import React, { useState } from 'react';
 
-
 const RegisterPage: React.FC = () => {
   // State variables to store form input values
   const [username, setUsername] = useState('');

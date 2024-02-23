@@ -3,22 +3,21 @@
 import React from 'react'
 import { useState } from 'react';
 
-interface MenuselectbuttonProp {
+interface MenuSelectButtonClientProp {
   menuText: string;
   isActive: boolean;
   onClick?: () => void;
 }
 
-const MenuselectbuttonProp: React.FC<MenuselectbuttonProp> = ({ menuText, onClick, isActive }) => {
+const MenuSelectButtonClient: React.FC<MenuSelectButtonClientProp> = ({ menuText, onClick, isActive }) => {
   const [isHovered, setIsHovered] = useState<boolean>(false);  
   const buttonStyle: React.CSSProperties = {
     cursor: 'pointer',
-    padding: '10px',
-    width: '120px',
+    padding: '10px 0px',
     backgroundColor: isActive ? '#A93F3F' : (isHovered ? '#A93F3F' : 'transparent'), // Background color changes on hover
-    color: isActive ? '#FDD77D' :  (isHovered ? '#FDD77D' : 'black'),
+    color: isActive ? '#FDD77D' :  (isHovered ? '#FDD77D' : '#A93F3F'),
   };
-  console.log(onClick);
+  // console.log(onClick);
 
   return (
     <div
@@ -29,10 +28,10 @@ const MenuselectbuttonProp: React.FC<MenuselectbuttonProp> = ({ menuText, onClic
       onClick={onClick}
     >
       {/* <div style={{ height: '10px' }}></div> */}
-      <p className="text-[18px] font-bold ">{menuText}</p>
-     
+      <p className="text-base font-bold">{menuText}</p>
+  
     </div>
   );
 }
 
-export default MenuselectbuttonProp;
+export default MenuSelectButtonClient;

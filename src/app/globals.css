@@ -12,6 +12,10 @@
   --foreground-rgb: 0, 0, 0;
 } 
 
+body {
+  font-family: 'Inter', sans-serif;
+}
+
 .custom-pagination .ant-pagination-item-active a {
   color: red !important;
   border-color: red !important;
@@ -21,4 +25,21 @@
 }
 .cancel-button:hover {
   border-color: #FF0000;
+}
+.no-border-radius-modal .ant-modal-content {
+  border-radius: 0;
+}
+
+.custom-submenu.ant-menu-submenu {
+  border-radius: 0; 
+}
+
+.custom-menu .ant-menu-item:hover {
+  background-color: #A93F3F !important;
+  color: #FDD77D !important;
+}
+
+.custom-submenu .ant-menu-submenu-title {
+  padding-top: 0;
+  padding-bottom: 0;
 }
