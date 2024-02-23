@@ -111,10 +111,10 @@ export default async function IndexSSPage({}: Props) {
   return(
   <main>
   {
-     <Menulist/> 
+    //  <Menulist/> 
   }
   {
-    //  <Header/> 
+  <Header/> 
   }
   {
     /* <LoginPage/> */

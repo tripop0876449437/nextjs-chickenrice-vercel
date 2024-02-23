@@ -3,6 +3,8 @@ import Image from "next/image";
 import { useState } from "react";
 import OrderAddressButton from "../buttons/orderAddressButton";
 import InStoreTableList from "../bodyContent/InStoreTableList";
+import CurrentOrder from "../bodyContent/CurrentOrder";
+import BackStoreList from "../bodyContent/BackStoreList";
 
 
 export const Header = () => {
@@ -38,6 +40,8 @@ export const Header = () => {
 
       {/* BodyContent */}
       {selectMenu === "หน้าร้าน" && <InStoreTableList />}
+      {selectMenu === "ซื้อกลับบ้าน" && <BackStoreList />}
+      {selectMenu === "ออร์เดอร์วันนี้" && <CurrentOrder />}
 
 
     </main>

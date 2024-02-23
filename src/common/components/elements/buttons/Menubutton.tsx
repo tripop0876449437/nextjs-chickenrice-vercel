@@ -13,7 +13,8 @@ const MenuselectbuttonProp: React.FC<MenuselectbuttonProp> = ({ menuText, onClic
   const [isHovered, setIsHovered] = useState<boolean>(false);  
   const buttonStyle: React.CSSProperties = {
     cursor: 'pointer',
-    padding: '16px',
+    padding: '10px',
+    width: '120px',
     backgroundColor: isActive ? '#A93F3F' : (isHovered ? '#A93F3F' : 'transparent'), // Background color changes on hover
     color: isActive ? '#FDD77D' :  (isHovered ? '#FDD77D' : 'black'),
   };
@@ -21,14 +22,14 @@ const MenuselectbuttonProp: React.FC<MenuselectbuttonProp> = ({ menuText, onClic
 
   return (
     <div
-      className={`border-2 border-[#A93F3F] flex flex-col items-center justify-center mt-3`}
+      className={`border-2 border-[#A93F3F] flex flex-col items-center justify-center`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       style={buttonStyle} // Optional: Add pointer cursor on hover
       onClick={onClick}
     >
       {/* <div style={{ height: '10px' }}></div> */}
-      <p className="text-xl font-bold ">{menuText}</p>
+      <p className="text-[18px] font-bold ">{menuText}</p>
      
     </div>
   );
