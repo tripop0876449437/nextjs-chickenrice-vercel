@@ -3,6 +3,8 @@ import Image from 'next/image'
 import MenuselectbuttonProp from '../buttons/Menubutton'
 import SearchBar from '../search/searchmenu'
 import { Input } from 'antd'
+import InStoreAddGroupmenu from '../buttons/addgroupmenubutton'
+import Addmenu from '../buttons/Addmenu'
 
 const BackStoreList = () => {
   const [selectMenu, setSelectMenu] = useState<string>("หน้าร้าน");
@@ -85,10 +87,11 @@ const BackStoreList = () => {
                 isActive={selectMenu === "เครื่องดื่ม"}
                 onClick={() => handlerMenu("เครื่องดื่ม")}
               />
+              <InStoreAddGroupmenu/>
             </div>
             {/* TableListMenu */}
             <div className="flex flex-col w-full p-2" >
-              <div className="flex items-start bg-red-300 h-fit">
+              <div className="flex items-start bg-red-300 h-fit ">
                   <Input
                     placeholder="ค้นหาออร์เดอร์"
                     prefix={<Image src="/search.png" alt="search" width={16} height={16} className='ml-[6px]' />}
@@ -96,7 +99,7 @@ const BackStoreList = () => {
                     onChange={handleChange} // Add onChange event handler
                   />
               </div>
-              <div className="grid grid-cols-4 gap-4">
+              <div className="grid grid-cols-4 gap-4 mt-3">
                 <div className="border border-[#A93F3F] h-[170px] justify-center cursor-pointer">
                   <div className="border border-black h-[100px]">
                     <Image src="" alt="" />
@@ -137,8 +140,8 @@ const BackStoreList = () => {
                     ข้าวมันไก่แซบ
                   </div>
                 </div>
+                  <Addmenu/>
               </div>
-
             </div>
           </div>
         </div>

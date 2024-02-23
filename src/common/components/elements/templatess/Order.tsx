@@ -1,10 +1,11 @@
 import { Image } from "antd";
-import Input from "antd";
+import { Button,Modal,Input } from "antd";
+
 
 const Orderlist = () => {
   return (
   <main>
-    <div className="border border-red-500 w-[300px] h-[450px] ml-5 mt-5">
+    {/* <div className="border border-red-500 w-[300px] h-[450px] ml-5 mt-5">
       <div className="flex justify-center mt-5 text-yellow-500 text-2xl">
         เพิ่มเมนู
       </div>
@@ -28,7 +29,25 @@ const Orderlist = () => {
       <div className="mt-4 ml-[100px] border border-green-500 w-[81px] h-[42px] flex justify-center items-center">
         <button className="text-green-500">เพิ่มเมนู</button>
       </div>
+    </div> */}
+ 
+    <div className="border border-red-500 w-[400px] h-[170px] mt-5 ml-5">
+
+      <div className="flex justify-center items-center mt-3">
+        <div className="text-yellow-500 text-2xl">เพิ่มหมวดหมู่</div>
+      </div>
+        <div className="flex justify-center items-center mt-3">
+          <div className="mr-3 text-red-500">ชื่อหมวดสินค้า</div>
+         <div>
+          <Input style={{width: 200}} 
+          className="border border-red-500 mr-7"/>
+         </div>
+        </div>
+        <div className="ml-[150px] mt-5 border border-green-500 w-[81px] h-[42px] flex justify-center items-center">
+        <button className="text-green-500">เพิ่มเมนู</button>
+        </div>
     </div>
+ 
   </main>
   );
 };
