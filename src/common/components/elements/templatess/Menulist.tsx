@@ -5,13 +5,15 @@ import Header from "../templatess/Header";
 import Image from "next/image";
 import OrderAddressButton from "../buttons/orderAddressButton";
 import { useState } from "react";
-import TableButton from "../buttons/tableButton";
 import BackButton from "../buttons/backButton";
 import Menubutton from "../buttons/Menubutton";
 import MenuselectbuttonProp from "../buttons/Menubutton";
 import { Input } from "antd";
-import InStoreTableList from "../bodyContent/InStoreTableList";
+import InStoreAddmenu from "../buttons/addgroupmenubutton";
 import SearchBar from "../search/searchmenu";
+import InStoreTableList from "../bodyContent/InStoreTableList";
+
+
 
 type Props = {};
 
@@ -142,6 +144,7 @@ const Menulist = (props: Props) => {
             isActive={selectMenu === "เครื่องดื่ม"}
             onClick={() => handlerMenu("เครื่องดื่ม")}
           />
+          <InStoreAddmenu />
         </div>
 
         <div className="grid grid-cols w-[700px] mt-3 mr-3">
@@ -188,11 +191,15 @@ const Menulist = (props: Props) => {
                     ข้าวมันไก่แซบ
                   </div>
                 </div>
+                <div className="border border-red-500">AA</div>
+                
               </div>
             </div>
+       
           </div>
         </div>
       </div>
+      
     </main>
   );
 };

@@ -6,6 +6,7 @@ import Image from "next/image";
 import Menulist from "@/common/components/elements/templatess/Menulist";
 import Menubutton from "@/common/components/elements/buttons/Menubutton";
 import MenuselectbuttonProp from "@/common/components/elements/buttons/Menubutton";
+import Orderlist from "@/common/components/elements/templatess/Order";
 
 type Props = {};
 
@@ -113,6 +114,7 @@ export default async function IndexSSPage({}: Props) {
   {
      <Menulist/> 
   }
+    {/* <Orderlist/> */}
   {
     //  <Header/> 
   }
