@@ -5,13 +5,15 @@ import Header from "../templatess/Header";
 import Image from "next/image";
 import OrderAddressButton from "../buttons/orderAddressButton";
 import { useState } from "react";
-import TableButton from "../buttons/tableButton";
 import BackButton from "../buttons/backButton";
 import Menubutton from "../buttons/Menubutton";
 import MenuselectbuttonProp from "../buttons/Menubutton";
 import { Input } from "antd";
-import InStoreTableList from "../bodyContent/InStoreTableList";
+import InStoreAddmenu from "../buttons/addgroupmenubutton";
 import SearchBar from "../search/searchmenu";
+import InStoreTableList from "../bodyContent/InStoreTableList";
+
+
 
 type Props = {};
 
@@ -142,15 +144,16 @@ const Menulist = (props: Props) => {
             isActive={selectMenu === "เครื่องดื่ม"}
             onClick={() => handlerMenu("เครื่องดื่ม")}
           />
+          <InStoreAddmenu />
         </div>
 
-        <div className="grid grid-cols w-[700px] mt-3 mr-3">
+        <div className="grid grid-cols w-[700px] mt-1 mr-3">
           <div className="h-[50px]">
             {/* <Input alt="Search" width={190} height={30} className="border border-red-500" /> */}
             <SearchBar onSubmit={handleSearch} />
           </div>
 
-          <div className="h-[400px] cursor-pointer">
+          <div className="h-[400px] cursor-pointer ">
             <div className="mr-3 ml-3 mt-3 flex justify-between">
               <div className="grid grid-cols-3 gap-10">
                 <div className="border border-red-700 w-[190px] h-[170px] justify-center ">
@@ -188,11 +191,15 @@ const Menulist = (props: Props) => {
                     ข้าวมันไก่แซบ
                   </div>
                 </div>
+                <div className="border border-red-500">AA</div>
+                
               </div>
             </div>
+       
           </div>
         </div>
       </div>
+      
     </main>
   );
 };
