@@ -30,7 +30,7 @@ const MenuselectbuttonProp: React.FC<MenuselectbuttonProp> = ({ menuText, onClic
     >
       {/* <div style={{ height: '10px' }}></div> */}
       <p className="text-[18px] font-bold ">{menuText}</p>
-     
+    
     </div>
   );
 }

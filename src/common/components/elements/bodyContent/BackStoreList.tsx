@@ -3,9 +3,12 @@ import Image from 'next/image'
 import MenuselectbuttonProp from '../buttons/Menubutton'
 import SearchBar from '../search/searchmenu'
 import { Input } from 'antd'
+import TableBackMenuList from './TableBackMenuList'
+import MenuDiscriptionModel from '../modals/MenuDiscriptionModal'
+import QrCodeModal from '../modals/QrCodeModal'
 
 const BackStoreList = () => {
-  const [selectMenu, setSelectMenu] = useState<string>("หน้าร้าน");
+  const [selectMenu, setSelectMenu] = useState<string>("");
 
   const handlerMenu = (menuText: string) => {
     setSelectMenu(menuText);
@@ -25,6 +28,19 @@ const BackStoreList = () => {
     console.log(value); // Log the value of the input search field
   };
 
+  const [isActiveQR, setIsActiveQR] = useState(false)
+
+  const handleClickQrCode = () => {
+    setIsActiveQR(true);
+  }
+
+  const handleClickQrCodeClose = () => {
+    setIsActiveQR(false);
+  }
+  
+  
+  
+
   return (
     <>
       <div className="flex flex-col">
@@ -34,10 +50,12 @@ const BackStoreList = () => {
         {/* Body */}
         <div className="grid grid-cols-3">
           <div className="w-full pr-[30px]">
-            <div className="flex justify-center items-center w-full h-[44px] bg-[#D9D9D9] cursor-pointer">
+            <div className="flex justify-center items-center w-full h-[44px] bg-[#D9D9D9] cursor-pointer" onClick={handleClickQrCode}>
               <Image src="mdi_qrcode-scan.svg" alt="" width="24" height="24" />
               <span className='text-[18px] ml-4'>พิมพ์ QR CODE</span>
             </div>
+            {/* Modal QrCode */}
+            <QrCodeModal menuName='QrCode' visible={isActiveQR} onClose={handleClickQrCodeClose} />
             {/* Bil */}
             <div className="flex justify-center items-center py-[16px]">
               <div className="border border-black w-[250px] h-[230px] p-[16px]">
@@ -86,59 +104,19 @@ const BackStoreList = () => {
                 onClick={() => handlerMenu("เครื่องดื่ม")}
               />
             </div>
-            {/* TableListMenu */}
-            <div className="flex flex-col w-full p-2" >
+            {/* Menu&TableListMenu */}
+            <div className="flex flex-col w-full" >
+              {/* Search ListMenu */}
               <div className="flex items-start bg-red-300 h-fit">
-                  <Input
-                    placeholder="ค้นหาออร์เดอร์"
-                    prefix={<Image src="/search.png" alt="search" width={16} height={16} className='ml-[6px]' />}
-                    className="flex-1 h-[30px] pr-[16px] border-2 border-[#A93F3F] rounded-none"
-                    onChange={handleChange} // Add onChange event handler
+                <Input
+                  placeholder="ค้นหาออร์เดอร์"
+                  prefix={<Image src="/search.png" alt="search" width={16} height={16} className='ml-[6px]' />}
+                  className="flex-1 h-[30px] pr-[16px] border-2 border-[#A93F3F] rounded-none"
+                  onChange={handleChange} // Add onChange event handler
                   />
               </div>
-              <div className="grid grid-cols-4 gap-4">
-                <div className="border border-[#A93F3F] h-[170px] justify-center cursor-pointer">
-                  <div className="border border-black h-[100px]">
-                    <Image src="" alt="" />
-                  </div>
-                  <div className="flex items-center justify-center mt-5">
-                    ข้าวมันไก่ต้ม
-                  </div>
-                </div>
-                <div className="border border-[#A93F3F] h-[170px] justify-center cursor-pointer">
-                  <div className="border border-black h-[100px]">
-                    <Image src="" alt="" />
-                  </div>
-                  <div className="flex items-center justify-center mt-5">
-                    ข้าวมันไก่ทอด
-                  </div>
-                </div>
-                <div className="border border-[#A93F3F] h-[170px] justify-center cursor-pointer">
-                  <div className="border border-black h-[100px]">
-                    <Image src="" alt="" />
-                  </div>
-                  <div className="flex items-center justify-center mt-5">
-                    ข้าวมันไก่รวม
-                  </div>
-                </div>
-                <div className="border border-[#A93F3F] h-[170px] justify-center cursor-pointer">
-                  <div className="border border-black h-[100px]">
-                    <Image src="" alt="" />
-                  </div>
-                  <div className="flex items-center justify-center mt-5">
-                    ข้าวมันไก่แซบ
-                  </div>
-                </div>
-                <div className="border border-[#A93F3F] h-[170px] justify-center cursor-pointer">
-                  <div className="border border-black h-[100px]">
-                    <Image src="" alt="" />
-                  </div>
-                  <div className="flex items-center justify-center mt-5">
-                    ข้าวมันไก่แซบ
-                  </div>
-                </div>
-              </div>
-
+              {/* TableListMenu */}
+              { selectMenu === "เมนูทั้งหมด" && <TableBackMenuList />}
             </div>
           </div>
         </div>

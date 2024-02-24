@@ -24,7 +24,6 @@ const OrderMenuModalClient: React.FC<OrderMenuModalClientProps> = ({ visible, ta
       centered
       width={310}
       style={{ height: '440px', padding: 0 }}
-      bodyStyle={{ padding: 0 }}
       className="no-border-radius-modal"
     >
       <div className='text-center'>

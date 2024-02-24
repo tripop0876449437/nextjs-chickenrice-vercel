@@ -39,7 +39,6 @@ const MenuDiscriptionModelClient: React.FC<MenuDiscriptionModalClientProps> = ({
       centered
       width={300}
       style={{ height: '465.3px', padding: 0 }}
-      bodyStyle={{ padding: 0 }}
       className="no-border-radius-modal"
     >
       <div className='text-center'>
