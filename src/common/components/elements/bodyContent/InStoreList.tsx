@@ -3,10 +3,11 @@ import Image from 'next/image'
 import MenuselectbuttonProp from '../buttons/Menubutton'
 import SearchBar from '../search/searchmenu'
 import { Input } from 'antd'
-import TableBackMenuList from './TableBackMenuList'
+import TableMenuList from './TableMenuList'
 import QrCodeModal from '../modals/QrCodeModal'
+import AddCategoryModal from '../modals/AddCategoryModal'
 
-const BackStoreList = () => {
+const InStoreList = () => {
   const [selectMenu, setSelectMenu] = useState<string>("เมนูทั้งหมด");
 
   const handlerMenu = (menuText: string) => {
@@ -37,11 +38,31 @@ const BackStoreList = () => {
     setIsActiveQR(false);
   }
 
+  const [IsVisibleAddButtonCategory, setIsVisibleAddButtonCategory] = useState(false);
+
+  const handleAddButtonCategory = () => {
+    setIsVisibleAddButtonCategory(true);
+  }
+
+  const handleAddButtonCategoryClose = () => {
+    setIsVisibleAddButtonCategory(false);
+  }
+
+
+  const [instoreOneTwo, setInstoreOneTwo] = useState<string>('one')
+
+  const handleBack = () => {
+    localStorage.setItem('instoreOneTwo', instoreOneTwo);
+    window.location.reload()
+  }
+  
+
   return (
     <>
       <div className="flex flex-col">
-        <div className="flex justify-start items-center py-[16px]">
-          <span className="text-[40px] font-bold text-black">กลับบ้าน 1</span>
+        <div className="flex justify-between items-center py-[16px]">
+          <span className="text-[40px] font-bold text-[#00BE2A]">โต๊ะ 1</span>
+          <span className="text-[32px] font-bold text-[#1B00BE] cursor-pointer" onClick={handleBack}>ย้อนกลับ</span>
         </div>
         {/* Body */}
         <div className="grid grid-cols-3">
@@ -99,6 +120,15 @@ const BackStoreList = () => {
                 isActive={selectMenu === "เครื่องดื่ม"}
                 onClick={() => handlerMenu("เครื่องดื่ม")}
               />
+              <div className=" h-[16px]"></div>
+              <div
+                className="text-[18px] flex items-center justify-center h-[42px] cursor-pointer"
+                style={{ background: '#FDD77D' }}
+                onClick={handleAddButtonCategory}
+              >
+                <span className="text-[#A93F3F] text-[18px] font-bold">+</span>
+              </div>
+              <AddCategoryModal visible={IsVisibleAddButtonCategory} onClose={handleAddButtonCategoryClose} />
             </div>
             {/* Menu&TableListMenu */}
             <div className="flex flex-col w-full" >
@@ -109,10 +139,10 @@ const BackStoreList = () => {
                   prefix={<Image src="/search.png" alt="search" width={16} height={16} className='ml-[6px]' />}
                   className="flex-1 h-[30px] pr-[16px] border-2 border-[#A93F3F] rounded-none"
                   onChange={handleChange} // Add onChange event handler
-                  />
+                />
               </div>
               {/* TableListMenu */}
-              { selectMenu === "เมนูทั้งหมด" && <TableBackMenuList />}
+              {selectMenu === "เมนูทั้งหมด" && <TableMenuList />}
             </div>
           </div>
         </div>
@@ -121,4 +151,4 @@ const BackStoreList = () => {
   )
 }
 
-export default BackStoreList
+export default InStoreList

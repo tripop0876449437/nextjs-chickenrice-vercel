@@ -1,31 +1,61 @@
 "use client";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { Form, Checkbox, Input } from "antd";
+import { Form, Checkbox, Input, message } from "antd";
 import { useDispatch } from "react-redux";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
 import SignInButton from "../../../common/components/elements/buttons/signinButton";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import api from "@/business/service/api";
+import { login } from '@/business/service/login'; 
+import { isAuthenticated } from '@/business/service/auth'; // Import your authentication function
 
 type Props = {};
 
-function LoginPage({ }: Props) {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-
-  const [textResponse, setTextResponse] = useState<string>("");
-  const [textStatus, setTextStatus] = useState<string>("");
-
-  const [isValidateUsername, setIsValidateUsername] = useState<boolean>(true);
-  const [isValidatePassword, setIsValidatePassword] = useState<boolean>(true);
-  const [openModal, setOpenModal] = useState<boolean>(false);
-
+const LoginPage = () => {
   const [form] = Form.useForm();
   const [rememberMe, setRememberMe] = useState(false);
 
-  const onFinish = (values: any) => {
-    console.log('Form values:', values);
-    // Here you can handle form submission, such as sending a request to authenticate the user
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
+  const [formData, setFormData] = useState({
+    username: '',
+    password: '',
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+  };
+
+  const onFinish = async (values: any) => {
+    try {
+      setLoading(true);
+      // Send a POST request to the login API endpoint
+      console.log(formData);
+      
+      const response = await login(formData);
+      // console.log('Registration successful:', response);
+
+      // Check if the login was successful (status code 200)
+      if (response.status === 200) {
+        // Redirect the user to the dashboard or another page
+        router.push("/");
+      } else {
+        // Display an error message if login failed
+        message.error("Login failed. Please check your credentials.");
+      }
+    } catch (error) {
+      // Display an error message if an exception occurred during login
+      message.error("An error occurred during login.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleCheckRememberMe = (e: CheckboxChangeEvent) => {
@@ -34,102 +64,20 @@ function LoginPage({ }: Props) {
       : sessionStorage.setItem("login_in", "no");
   };
 
-
-  // return (
-  //   <>
-  //     <div className="flex justify-center items-center h-full">
-  //       <div className="w-[150px] h-[150px] relative ml-20 mt-24 ">
-  //         <div className="h-full w-full border-2 rounded-full border-gray-400 "></div>
-  //       </div>
-  //     </div>
-
-  //     <div className="flex justify-center items-center ml-20 mt-5 font-bold text-[32px]">
-  //       Login
-  //     </div>
-
-  //     <div className="flex justify-center items-center">
-  //       <label
-  //         htmlFor="username"
-  //         className="text-gray-900 text-base font-normal font-['Tahoma'] leading-normal mr-3"
-  //       >
-  //         Username
-  //       </label>
-
-  //       <div className="mt-2.5">
-  //         {!isValidateUsername && (
-  //           <div className="text-red-500 text-[12px] py-2">
-  //             <p>Please Enter Username</p>
-  //           </div>
-  //         )}
-
-  //         <Input
-  //           size="large"
-  //           status={isValidateUsername ? "" : "error"}
-  //           width={300}
-  //           style={{ width: 300 }}
-  //           onChange={(e) => {
-  //             const username = e.target.value;
-
-  //             username.trim().length === 0
-  //               ? setIsValidateUsername(false)
-  //               : setIsValidateUsername(true);
-
-  //             setUsername(username);
-  //           }}
-  //           placeholder="username"
-  //         ></Input>
-  //       </div>
-  //     </div>
-
-  //     <div className="mt-[20px] flex justify-center items-center">
-  //       <label
-  //         htmlFor="Password"
-  //         className="text-gray-900 text-base font-normal font-['Tahoma'] leading-normal mr-3"
-  //       >
-  //         Password
-  //       </label>
-
-  //       <div className="mt-2.5">
-  //         {!isValidatePassword && (
-  //           <div className=" text-red-500 text-[12px] py-2">
-  //             <p>Please Enter Password</p>
-  //           </div>
-  //         )}
-
-  //         <Input.Password
-  //           size="large"
-  //           status={isValidatePassword ? "" : "error"}
-  //           width={300}
-  //           style={{ width: 300 }}
-  //           onChange={(e) => {
-  //             let password = e.target.value;
-
-  //             password.trim().length === 0
-  //               ? setIsValidatePassword(false)
-  //               : setIsValidatePassword(true);
-
-  //             setPassword(password);
-  //           }}
-  //           placeholder="*******"
-  //         />
-  //       </div>
-  //     </div>
-
-  //     <div className="flex justify-center items-center mt-5  ">
-  //       <div className="">
-  //         <Checkbox onChange={handleCheckRememberMe}>Remember me</Checkbox>
-  //       </div>
-  //       <div className="text-sm ml-11">Forgot Password</div>
-  //     </div>
-  //   </>
-  // );
+  useEffect(() => {
+    // Check if the user is already logged in
+    if (isAuthenticated()) {
+      // Redirect the user to the main page or dashboard
+      router.push('/');
+    }
+  }, [router]);
 
   return (
     <>
       <div className="flex justify-center items-center h-screen">
         <div className="">
           <div className="flex justify-center ">
-            <Image
+            <Image  
               src="/login.png"
               alt="login.png"
               width={150}
@@ -144,28 +92,15 @@ function LoginPage({ }: Props) {
           <Form form={form} onFinish={onFinish}>
             <div className="mt-[40px]">
               <div>
-                <div>
-                  {!isValidateUsername && (
-                    <div className="text-red-500 text-[12px] py-2">
-                      <p>Please enter your username</p>
-                    </div>
-                  )}
-                </div>
                 <Form.Item>
                   <div className="relative mt-1">
                     <Input
-                      status={isValidateUsername ? "" : "error"}
                       width={300}
                       style={{ width: 300 }}
-                      onChange={(e) => {
-                        const username = e.target.value;
-
-                        username.trim().length === 0
-                          ? setIsValidateUsername(false)
-                          : setIsValidateUsername(true);
-
-                        setUsername(username);
-                      }}
+                      id="username"
+                      name="username"
+                      value={formData.username}
+                      onChange={handleChange}
                       placeholder="Username"
                       className="h-[40px] pl-[48px] pr-[16px] py-2 rounded-[30px] border-2 border-[#A93F3F]"
                     />
@@ -181,28 +116,15 @@ function LoginPage({ }: Props) {
                 </Form.Item>
               </div>
               <div className="mt-[20px]">
-                <div>
-                  {!isValidatePassword && (
-                    <div className="text-red-500 text-[12px] py-2">
-                      <p>Please enter your password</p>
-                    </div>
-                  )}
-                </div>
                 <Form.Item>
                   <div className="relative">
                     <Input.Password
                       width={300}
+                      id="password"
+                      name="password"
+                      value={formData.password}
                       style={{ width: 300 }}
-                      status={isValidatePassword ? "" : "error"}
-                      onChange={(e) => {
-                        let password = e.target.value;
-
-                        password.trim().length === 0
-                          ? setIsValidatePassword(false)
-                          : setIsValidatePassword(true);
-
-                        setPassword(password);
-                      }}
+                      onChange={handleChange}
                       placeholder="Password"
                       className="h-[40px] pl-[48px] pr-[16px] py-2 rounded-[30px] border-2 border-[#A93F3F]"
                     />

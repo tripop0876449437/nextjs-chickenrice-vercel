@@ -1,33 +1,25 @@
-import Input from "antd/es/input/Input";
-import LoginPage from "./auth/login/page";
+"use client"
 import Header from "@/common/components/elements/templatess/Header";
-import React, { useState } from "react";
-import Image from "next/image";
-import Menulist from "@/common/components/elements/templatess/Menulist";
-import Menubutton from "@/common/components/elements/buttons/Menubutton";
-import MenuselectbuttonProp from "@/common/components/elements/buttons/Menubutton";
-import Orderlist from "@/common/components/elements/templatess/Order";
+import React, { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { isAuthenticated } from "@/business/service/auth";
 
 type Props = {};
 
-export default async function IndexSSPage({}: Props) {
-  
-  return(
-  <main>
-  {
-    //  <Menulist/> 
-  }
-    {/* <Orderlist/> */}
-  {
-  <Header/> 
-  }
-  {
-    /* <LoginPage/> */
-  }
+export default async function IndexSSPage({ }: Props) {
+  const router = useRouter();
 
-   </main>
+  useEffect(() => {
+    // Check authentication status when the component mounts
+    if (!isAuthenticated()) {
+      // If user is not authenticated, redirect to login page
+      router.push("/auth/login");
+    }
+  }, [router]);
+
+  return (
+    <main>
+      <Header />
+    </main>
   )
-
-  
-  
 }

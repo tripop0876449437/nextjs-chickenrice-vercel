@@ -17,7 +17,7 @@ const Menu = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     setSearchValue(value);
-    console.log(value); // Log the value of the input search field
+    // console.log(value); // Log the value of the input search field
   };
 
   const handlerMenu = (textMenu: string) => {

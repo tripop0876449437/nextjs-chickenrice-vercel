@@ -25,9 +25,6 @@ const OrderMenuModal: React.FC<OrderMenuModalProps> = ({ visible, menuName, quat
     setIsModalSuccessVisible(true);
     setIsModalVisible(false);
   }
-
-  console.log(visible);
-  console.log(isModalSuccessVisible);
   
 
   return (

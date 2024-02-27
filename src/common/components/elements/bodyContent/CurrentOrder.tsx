@@ -13,15 +13,15 @@ const CurrentOrder = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     setSearchValue(value);
-    console.log(value); // Log the value of the input search field
+    // console.log(value); // Log the value of the input search field
   };
 
   const onClick = (e: any) => {
-    console.log('click ', e);
+    // console.log('click ', e);
   };
 
   const onOpenChange = (openKeys: React.Key[]) => {
-    console.log('openKeys: ', openKeys);
+    // console.log('openKeys: ', openKeys);
   };
 
   // Pagination

@@ -2,8 +2,9 @@ import React, { useState } from 'react'
 import Image from 'next/image'
 import MenuDiscriptionModel from '../modals/MenuDiscriptionModal'
 import { Pagination } from 'antd';
+import AddMenuModal from '../modals/AddMenuModal';
 
-const TableBackMenuList = () => {
+const TableMenuList = () => {
   const [selectListMenu, setSelectListMenu] = useState<string>("");
   const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -125,6 +126,26 @@ const TableBackMenuList = () => {
       moneyTotal: 100,
       image: '/ข้าวมันไก่ต้ม.jpg',
     },
+    {
+      title: 'โต๊ะ 6',
+      time: '12.00',
+      submenuItems: [
+        {
+          menu: 'ข้าวมันไก่ต้มธรรมดา',
+          quantity: 1,
+          total: 50,
+        },
+        {
+          menu: 'ข้าวมันไก่ต้มธรรมดา',
+          quantity: 1,
+          total: 50,
+        },
+      ],
+      moneyTotalName: 'ข้าวมันไก่ต้มธรรมดา',
+      quantityTotal: 2,
+      moneyTotal: 100,
+      image: '/ข้าวมันไก่ต้ม.jpg',
+    },
   ];
 
   // Calculate the start and end index of items for the current page
@@ -132,6 +153,16 @@ const TableBackMenuList = () => {
   const endIndex = Math.min(startIndex + pageSize, menuItems.length);
   const visibleMenuItems = menuItems.slice(startIndex, endIndex);
 
+
+  const [isVisibleAddButtonMenu, setIsVisibleAddButtonMenu] = useState(false);
+
+  const handleAddButtonMenu = () => {
+    setIsVisibleAddButtonMenu(true);
+  }
+
+  const handleAddButtonMenuClose = () => {
+    setIsVisibleAddButtonMenu(false);
+  }
 
   return (
     <div>
@@ -149,8 +180,16 @@ const TableBackMenuList = () => {
             </div>
           </div>
         ))}
+        <div
+          className="text-[40px] flex items-center justify-center h-[153px] cursor-pointer"
+          style={{ background: '#FDD77D' }}
+          onClick={handleAddButtonMenu}
+
+        >
+          <span className="text-[#A93F3F] text-[40px] font-bold">+</span>
+        </div>
+        <AddMenuModal visible={isVisibleAddButtonMenu} menuName={'ข้าวมันไก่ต้ม'} onClose={handleAddButtonMenuClose} />
       </div>
-      {/* <MenuDiscriptionModel visible={isModalVisible} menuName={'ข้าวมันไก่ต้ม'} price={400} quatity={8} total={400} imgFile={'/ข้าวมันไก่ต้ม.jpg'} onClose={handleCloseModal} /> */}
       {visibleMenuItems.map((menuItem, index) => (
         <MenuDiscriptionModel key={index} visible={isModalVisible} menuName={'ข้าวมันไก่ต้ม'} price={400} quatity={8} total={400} imgFile={menuItem.image} onClose={handleCloseModal} />
       ))}
@@ -161,4 +200,4 @@ const TableBackMenuList = () => {
   )
 }
 
-export default TableBackMenuList
+export default TableMenuList
