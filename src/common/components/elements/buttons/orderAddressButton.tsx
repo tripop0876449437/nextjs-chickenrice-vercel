@@ -17,7 +17,7 @@ const OrderAddressButton: React.FC<OrderAddressButtonProps> = ({ menuText, imgFi
     backgroundColor: isActive ? '#A93F3F' : (isHovered ? '#A93F3F' : 'transparent'), // Background color changes on hover
     color: isActive ? '#FDD77D' :  (isHovered ? '#FDD77D' : 'black'),
   };
-  console.log(onClick);
+  // console.log(onClick);
   
 
   return (

@@ -165,7 +165,7 @@ const TableMenuList = () => {
   }
 
   return (
-    <div>
+    <>
       <div className="grid grid-cols-4 gap-4 mt-4">
         {visibleMenuItems.map((menuItem, index) => (
           <div key={index} className="border border-[#A93F3F] w-full h-[153px] justify-center cursor-pointer p-2" onClick={() => handlerMenu(menuItem.title)}>
@@ -196,7 +196,7 @@ const TableMenuList = () => {
       <div className="flex justify-end mt-[16px]">
         <Pagination current={currentPage} pageSize={pageSize} total={menuItems.length} onChange={onPageChange} style={{ textAlign: 'center', color: 'red', borderColor: 'red' }} className="custom-pagination" />
       </div>
-    </div>
+    </>
   )
 }
 

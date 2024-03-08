@@ -53,7 +53,7 @@ const MenuDiscriptionModel: React.FC<MenuDiscriptionModalProps> = ({ visible, me
         className="no-border-radius-modal"
       >
         <div className='text-center'>
-          <Image src={imgFile} alt="" width={440} height={165.3} className='w-full' />
+          <img src={imgFile} alt="" width={440} height={165.3} className='w-full' />
           <div className='h-[30px]'></div>
           <p className='font-bold text-[18px] text-start'>{menuName}</p>
           <div className='h-[16px]'></div>

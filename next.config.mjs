@@ -5,7 +5,6 @@ const nextConfig = {
   env: {
     baseURLapi: process.env.BASE_URL_API
   }
-
 };
 
 export default nextConfig;

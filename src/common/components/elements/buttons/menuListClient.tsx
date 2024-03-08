@@ -17,7 +17,7 @@ const MenuListClient: React.FC<MenuListClientProps> = ({ menuText, imgFile, onCl
     // backgroundColor: isActive ? '#A93F3F' : (isHovered ? '#A93F3F' : 'transparent'), // Background color changes on hover
     // color: isActive ? '#FDD77D' :  (isHovered ? '#FDD77D' : 'black'),
   };
-  console.log(onClick);
+  console.log(imgFile);
   
 
   return (
@@ -28,7 +28,7 @@ const MenuListClient: React.FC<MenuListClientProps> = ({ menuText, imgFile, onCl
       style={buttonStyle} // Optional: Add pointer cursor on hover
       onClick={onClick}
     >
-      <Image src={imgFile} alt="" width={165} height={105} />
+      <img src={imgFile} alt="" width={165} height={105} />
       <p className="text-[16px] font-bold mt-[16px] text-[#A93F3F]">{menuText}</p>
     </div>
   );

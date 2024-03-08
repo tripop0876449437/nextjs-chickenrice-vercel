@@ -4,9 +4,7 @@ import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { isAuthenticated } from "@/business/service/auth";
 
-type Props = {};
-
-export default async function IndexSSPage({ }: Props) {
+export default function IndexSSPage() {
   const router = useRouter();
 
   useEffect(() => {

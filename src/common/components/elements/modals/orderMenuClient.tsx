@@ -18,7 +18,7 @@ const OrderMenuModalClient: React.FC<OrderMenuModalClientProps> = ({ visible, ta
   return (
     <Modal
       closeIcon={false}
-      visible={visible}
+      open={visible}
       onCancel={onClose}
       footer={null}
       centered
