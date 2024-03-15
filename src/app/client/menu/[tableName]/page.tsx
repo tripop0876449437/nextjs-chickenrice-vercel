@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Input, Modal } from 'antd';
+import { Button, Input, Modal, Spin } from 'antd';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react'
 import MenuSelectButtonClient from '@/common/components/elements/buttons/menubuttonClient';
@@ -15,6 +15,7 @@ const CLIENT_URL = process.env.NEXT_PUBLIC_CLIENT_URL;
 
 const Menu = ({ params, }: { params: { tableName: string } }) => {
   const router = useRouter();
+  const [loading, setLoading] = useState<boolean>(false);
   const [selectMenu, setSelectMenu] = useState<string>("เมนูทั้งหมด")
   const [searchValue, setSearchValue] = useState<string>('');
 
@@ -28,11 +29,13 @@ const Menu = ({ params, }: { params: { tableName: string } }) => {
   const [selectMenuCategory, setSelectMenuCategory] = useState<string>("เมนูทั้งหมด");
   const [selectMenuCategoryId, setSelectMenuCategoryId] = useState<number>(0);
 
+  const [orderQuantityTotal, setOrderQuantityTotal] = useState<number>(0)
+
   useEffect(() => {
-    const PRTableName = params.tableName
+    const PRTableName = decodeURI(params.tableName)
     if (PRTableName) {
       // If instoreOneTwo is not found in localStorage, use the current state value
-      localStorage.setItem('tableNameClient', params.tableName)
+      localStorage.setItem('tableNameClient', PRTableName)
     } else {
       // If instoreOneTwo is found in localStorage, update the state with its value
       console.log('not found tableNameClient');
@@ -40,18 +43,22 @@ const Menu = ({ params, }: { params: { tableName: string } }) => {
     }
     const fetchCategories = async () => {
       try {
+        setLoading(true);
         const response = await axios.post(`${BASE_URL_API}/api/category`, {});
 
         console.log('Categories response:', response.data);
         setCategoriesData(response.data);
+        setLoading(false);
       } catch (error) {
         console.error('Error fetching categories:', error);
+        setLoading(false);
       }
     };
 
 
     const fetchSearchMenu = async () => {
       try {
+        setLoading(true);
         console.log('selectMenuCategory', selectMenuCategory);
         let response;
         if (selectMenuCategory === 'เมนูทั้งหมด') {
@@ -61,10 +68,24 @@ const Menu = ({ params, }: { params: { tableName: string } }) => {
         }
         console.log('SearchResults', response.data);
         setSearchResults(response.data);
+        setLoading(false);
       } catch (error) {
         console.error('Error searching:', error);
+        setLoading(false);
       }
     };
+
+    const fetchOrderTotal = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.post(`${BASE_URL_API}/api/order-total/${PRTableName}`)
+        setOrderQuantityTotal(response.data[0].orderTotal.ordertotalquantity);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetchOrderTotal:", error);
+        setLoading(false);
+      }
+    }
 
     fetchCategories();
     console.log('------------------');
@@ -74,6 +95,7 @@ const Menu = ({ params, }: { params: { tableName: string } }) => {
     }
     console.log('------------------');
     console.log('SearchResults useEffect:', searchResults);
+    fetchOrderTotal();
 
 
   }, [searchQuery, selectMenuCategory, searchResults, params.tableName]); // Empty dependency array to run the effect only once on mount
@@ -171,7 +193,7 @@ const Menu = ({ params, }: { params: { tableName: string } }) => {
     console.log('productId', productId);
 
     const orderResponse = {
-      customerName: params.tableName,
+      customerName: decodeURI(params.tableName),
       orderProductQuantity: count,
       orderProductPrice: total
     }
@@ -215,7 +237,7 @@ const Menu = ({ params, }: { params: { tableName: string } }) => {
       <div className="py-[40px] px-[10px]">
         <div className="flex justify-between bg-[#FDD77D] p-[4px]">
           <div className="flex flex-col">
-            <span className='text-[18px] font-bold'>{params.tableName}</span>
+            <span className='text-[18px] font-bold'>{decodeURI(params.tableName)}</span>
             <span className='text-[12px] font-bold text-[#A93F3F]'>รวมอร่อย</span>
           </div>
           <div className="flex items-center cursor-pointer" onClick={nextToCartPage}>
@@ -243,6 +265,7 @@ const Menu = ({ params, }: { params: { tableName: string } }) => {
 
         {/* Menu List */}
         <div className="grid grid-cols-2 gap-2 mt-[16px]">
+
           {searchResults.products?.filter((menuItem: { category: { name: string } }) => {
             if (selectMenuCategory === "เมนูทั้งหมด" || !menuItem.category.name) {
               return true; // Show all menu items if selectMenuCategory is "เมนูทั้งหมด" or if the menuItem has no category
@@ -263,6 +286,7 @@ const Menu = ({ params, }: { params: { tableName: string } }) => {
               <p className="text-[16px] font-bold mt-[16px] text-[#A93F3F]">{menuItem.productName}</p>
             </div>
           ))}
+
         </div>
 
         {/* Modal */}
@@ -329,12 +353,11 @@ const Menu = ({ params, }: { params: { tableName: string } }) => {
         ))}
         {/* Footer Total */}
         <div className="flex justify-between items-center bg-[#FDD77D] h-[64px] p-[16px] mt-[16px]">
-          <div className="w-[19px] h-[32px] bg-white"></div>
+          <div className="w-[19px] h-[32px] bg-white flex justify-center items-center"><span>{orderQuantityTotal}</span></div>
           <div className="text-[18px] text-white"><span>ดูข้อมูลในตะกร้า</span></div>
           <div className="'text-[18px] text-[#C60000]"><span>รวมเงิน</span></div>
         </div>
-
-      </div>
+      </div >
     </>
   )
 }

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
-import { Button, Modal } from 'antd'
+import { Button, Modal, Spin } from 'antd'
 import OrderMenuModalClient from '@/common/components/elements/modals/orderMenuClient';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
@@ -12,49 +12,61 @@ const BASE_URL_API = process.env.NEXT_PUBLIC_BASE_URL_API;
 const CartPage = () => {
   const router = useRouter();
   const tableNameClient = localStorage.getItem('tableNameClient');
-
+  const [loading, setLoading] = useState<boolean>(true);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [orderProductData, setOrderProductData] = useState<any>({})
   const [orderQuantityTotal, setOrderQuantityTotal] = useState<number>(0)
   const [orderPriceTotal, setOrderPriceTotal] = useState<number>(0)
 
   useEffect(() => {
-    const formatOrderProduct = async () => {
+    const fetchData = async () => {
       try {
-        const response = await axios.post(`${BASE_URL_API}/api/order-product/${tableNameClient}`)
-        setOrderProductData(response.data)
+        setLoading(true);
+        const response = await axios.post(`${BASE_URL_API}/api/order-product/${tableNameClient}`);
+        setOrderProductData(response.data);
+        calculateTotals(response.data);
       } catch (error) {
-        console.log('Error is FormatOrderProduct: ', error);
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
       }
+    };
+
+    fetchData();
+  }, [tableNameClient]);
+
+  const calculateTotals = (data: any) => {
+    let totalQuantity = 0;
+    let totalPrice = 0;
+    if (data && data.orderProduct) {
+      data.orderProduct.forEach((orderProductItem: any) => {
+        totalQuantity += orderProductItem.orderProductQuantity;
+        totalPrice += orderProductItem.orderProductPrice;
+      });
     }
-    const calculateTotalQuantity = () => {
-      let totalQuantity = 0;
-      if (orderProductData && orderProductData.orderProduct) {
-        orderProductData.orderProduct.forEach((orderProductItem: any) => {
-          totalQuantity += orderProductItem.orderProductQuantity;
-        });
-      }
-      setOrderQuantityTotal(totalQuantity); // Update the orderQuantityTotal state
-    };
-    const calculateTotalPrice = () => {
-      let totalPrice = 0;
-      if (orderProductData && orderProductData.orderProduct) {
-        orderProductData.orderProduct.forEach((orderProductItem: any) => {
-          totalPrice += orderProductItem.orderProductPrice;
-        });
-      }
-      setOrderPriceTotal(totalPrice); // Update the orderQuantityTotal state
-    };
-
-    formatOrderProduct();
-    calculateTotalQuantity();
-    calculateTotalPrice();
-
-  }, [tableNameClient, orderProductData.orderProduct, orderProductData])
+    setOrderQuantityTotal(totalQuantity);
+    setOrderPriceTotal(totalPrice);
+  };
 
   const handlerMenu = () => {
     setIsModalVisible(true);
   }
+
+  const handleSubmitModal = async () => {
+    try {
+      setIsModalVisible(false);
+      const orderTotalPayload = {
+        orderTotalQuantity: orderQuantityTotal,
+        orderTotalPrice: orderPriceTotal,
+        tablename: tableNameClient
+      }
+      const response = await axios.post(`${BASE_URL_API}/api/order-total/add`, orderTotalPayload)
+      console.log('handleSubmitModal', response.data);
+    } catch (error) {
+      console.error('Error Submit Api Post OrderProduct.', error)
+    }
+  }
+
 
   const handleCloseModal = () => {
     setIsModalVisible(false);
@@ -185,7 +197,7 @@ const CartPage = () => {
                   <div style={{ width: '30px' }}></div>
                   <Button
                     key="confirm"
-                    onClick={() => handleCloseModal()}
+                    onClick={() => handleSubmitModal()}
                     style={{
                       width: '66px',
                       height: '42px',

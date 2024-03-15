@@ -1,0 +1,60 @@
+{
+  "orderTotal": [
+    {
+      "id": 1,
+      "tableName": "table1",
+      "orderProducts": [
+        {
+          "id": 1,
+          "productName": "ข้าวมันไก่ต้มธรรมดา",
+          "orderProductQuantity": 1,
+          "orderProductPrice": 50
+        },
+        {
+          "id": 2,
+          "productName": "ข้าวมันไก่ทอดธรรมดา",
+          "orderProductQuantity": 1,
+          "orderProductPrice": 50
+        },
+        {
+          "id": 3,
+          "productName": "น้ำเปล่าเล็ก",
+          "orderProductQuantity": 2,
+          "orderProductPrice": 20
+        }
+      ],
+      "orderTotalQuantity": 4,
+      "orderTotalPrice": 120,
+      "created_at": "2024-03-11T08:44:46.328Z",
+      "updated_at": "2024-03-11T08:44:46.328Z"
+    },
+    {
+      "id": 2,
+      "tableName": "table2",
+      "orderProducts": [
+        {
+          "id": 1,
+          "productName": "ข้าวมันไก่ต้มธรรมดา",
+          "orderProductQuantity": 3,
+          "orderProductPrice": 150
+        },
+        {
+          "id": 2,
+          "productName": "น้ำโค้กเล็ก",
+          "orderProductQuantity": 2,
+          "orderProductPrice": 30
+        },
+        {
+          "id": 3,
+          "productName": "น้ำเปล่าเล็ก",
+          "orderProductQuantity": 1,
+          "orderProductPrice": 10
+        }
+      ],
+      "orderTotalQuantity": 6,
+      "orderTotalPrice": 190,
+      "created_at": "2024-03-11T08:45:59.952Z",
+      "updated_at": "2024-03-11T08:45:59.952Z"
+    }
+  ]
+}

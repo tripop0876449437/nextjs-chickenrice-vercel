@@ -6,13 +6,13 @@ import { MailOutlined } from '@ant-design/icons';
 const { SubMenu } = Menu;
 
 const CurrentOrder = () => {
-  const [searchValue, setSearchValue] = useState<string>('');
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [searchValueCurrentOrder, setSearchValueCurrentOrder] = useState<string>('');
+  const [currentPageOrder, setCurrentPageOrder] = useState<number>(1);
   const pageSize = 4; // Number of items per page
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeCurrentOrder = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
-    setSearchValue(value);
+    setSearchValueCurrentOrder(value);
     // console.log(value); // Log the value of the input search field
   };
 
@@ -25,8 +25,8 @@ const CurrentOrder = () => {
   };
 
   // Pagination
-  const onPageChange = (page: number) => {
-    setCurrentPage(page);
+  const onPageChangeCurrentOrder = (page: number) => {
+    setCurrentPageOrder(page);
   };
 
   // Sample menu items
@@ -129,7 +129,7 @@ const CurrentOrder = () => {
   ];
 
   // Calculate the start and end index of items for the current page
-  const startIndex = (currentPage - 1) * pageSize;
+  const startIndex = (currentPageOrder - 1) * pageSize;
   const endIndex = Math.min(startIndex + pageSize, menuItems.length);
   const visibleMenuItems = menuItems.slice(startIndex, endIndex);
 
@@ -144,7 +144,7 @@ const CurrentOrder = () => {
             placeholder="ค้นหาออร์เดอร์"
             prefix={<Image src="/search.png" alt="search" width={16} height={16} className='ml-[6px]' />}
             className="h-[30px] pr-[16px] border-2 border-[#A93F3F] rounded-none"
-            onChange={handleChange} // Add onChange event handler
+            onChange={handleChangeCurrentOrder} // Add onChange event handler
           />
         </div>
       </div>
@@ -198,10 +198,10 @@ const CurrentOrder = () => {
         {/* Pagination */}
         <div className="flex justify-end mt-[16px]">
           <Pagination
-            current={currentPage}
+            current={currentPageOrder}
             pageSize={pageSize}
             total={menuItems.length}
-            onChange={onPageChange}
+            onChange={onPageChangeCurrentOrder}
             style={{ textAlign: 'center', color: 'red', borderColor: 'red' }}
             className="custom-pagination"
           />
