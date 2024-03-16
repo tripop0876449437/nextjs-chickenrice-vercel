@@ -2,7 +2,11 @@
 
 import { SetStateAction, useState } from 'react';
 
-const SearchBar = ({ onSubmit }) => {
+type Props = {
+  onSubmit: (query: string) => void;
+}
+
+const SearchBar: React.FC<Props> = ({ onSubmit }) => {
   const [query, setQuery] = useState('');
 
   const handleChange = (e: { target: { value: SetStateAction<string>; }; }) => {
