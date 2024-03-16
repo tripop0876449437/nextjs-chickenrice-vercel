@@ -10,16 +10,22 @@ const BASE_URL_API = process.env.NEXT_PUBLIC_BASE_URL_API;
 
 const CartPage = () => {
   const router = useRouter();
-  const tableNameClient = typeof localStorage !== 'undefined' ? localStorage.getItem('tableNameClient') : null;
-  // const tableNameClient = localStorage.getItem('tableNameClient');
+  // const tableNameClient = typeof localStorage !== 'undefined' ? localStorage.getItem('tableNameClient') : null;
+  const tableNameClient = localStorage.getItem('tableNameClient');
   const [loading, setLoading] = useState<boolean>(true);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [orderProductData, setOrderProductData] = useState<any>({})
   const [orderQuantityTotal, setOrderQuantityTotal] = useState<number>(0)
   const [orderPriceTotal, setOrderPriceTotal] = useState<number>(0)
 
+  
   useEffect(() => {
     const fetchData = async () => {
+      if (!tableNameClient) {
+        console.error('Bearer token not found in localStorage');
+        return;
+      }
+
       try {
         setLoading(true);
         const response = await axios.post(`${BASE_URL_API}/api/order-product/${tableNameClient}`);

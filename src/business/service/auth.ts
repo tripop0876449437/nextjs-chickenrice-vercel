@@ -2,8 +2,13 @@
 
 export const isAuthenticated = () => {
   // Check if the user is authenticated (e.g., check if token exists in local storage)
-  // const token = localStorage.getItem('accessToken');
-  const token = typeof localStorage !== 'undefined' ? localStorage.getItem('accessToken') : null;
+  // const token = typeof localStorage !== 'undefined' ? localStorage.getItem('accessToken') : null;
+  const token = localStorage.getItem('accessToken');
+  if (!token) {
+    console.error('Bearer token not found in localStorage');
+    return;
+  }
+  
   return !!token;
 };
 
