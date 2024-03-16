@@ -3,10 +3,10 @@
   "builds": [
     { "src": "package.json", "use": "@vercel/node" },
     { "src": "public/**/*", "use": "@vercel/static" },
-    { "src": "src/app/pages/**/*", "use": "@vercel/next" }
+    { "src": "src/app/page.tsx", "use": "@vercel/next" }
   ],
   "routes": [
     { "handle": "filesystem" },
-    { "src": "/(.*)", "dest": "/index.html" }
+    { "src": "/(.*)", "dest": "page.tsx" }
   ]
 }
