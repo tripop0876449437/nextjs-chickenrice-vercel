@@ -415,6 +415,7 @@ export const Header = () => {
       scheduleTokenRefresh(refreshTokenValue);
     } else {
       console.error('Refresh token not found');
+      return;
     }
   }, []); // Empty dependency array to run the effect only once on mount
 

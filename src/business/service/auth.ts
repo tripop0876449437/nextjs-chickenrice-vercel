@@ -2,7 +2,8 @@
 
 export const isAuthenticated = () => {
   // Check if the user is authenticated (e.g., check if token exists in local storage)
-  const token = localStorage.getItem('accessToken');
+  // const token = localStorage.getItem('accessToken');
+  const token = typeof localStorage !== 'undefined' ? localStorage.getItem('accessToken') : null;
   return !!token;
 };
 

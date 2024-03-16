@@ -12,7 +12,8 @@
 // auth-header.js
 export const getAuthHeader = () => {
   // Logic to get authentication token from localStorage or wherever it's stored
-  const token = localStorage.getItem('accessToken');
+  const token = typeof localStorage !== 'undefined' ? localStorage.getItem('accessToken') : null;
+  // const token = localStorage.getItem('accessToken');
   if (token) {
     return { Authorization: `Bearer ${token}` };
   } else {

@@ -10,7 +10,8 @@ const BASE_URL_API = process.env.NEXT_PUBLIC_BASE_URL_API;
 
 const CartPage = () => {
   const router = useRouter();
-  const tableNameClient = localStorage.getItem('tableNameClient');
+  const tableNameClient = typeof localStorage !== 'undefined' ? localStorage.getItem('tableNameClient') : null;
+  // const tableNameClient = localStorage.getItem('tableNameClient');
   const [loading, setLoading] = useState<boolean>(true);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [orderProductData, setOrderProductData] = useState<any>({})

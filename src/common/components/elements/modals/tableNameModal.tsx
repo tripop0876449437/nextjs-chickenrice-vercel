@@ -25,7 +25,8 @@ const TableNameModel: React.FC<ModalProps> = ({ visible, tableName, tableId, onC
       onClose();
       setSelectedTableName(tableName);
       setSelectedTableId(tableId);
-      const authToken = localStorage.getItem('accessToken');
+      // const authToken = localStorage.getItem('accessToken');
+      const authToken = typeof localStorage !== 'undefined' ? localStorage.getItem('accessToken') : null;
 
       if (!authToken) {
         console.error('Bearer token not found in localStorage');
@@ -59,7 +60,9 @@ const TableNameModel: React.FC<ModalProps> = ({ visible, tableName, tableId, onC
       onClose();
       setSelectedTableName(tableName);
       setSelectedTableId(tableId);
-      const authToken = localStorage.getItem('accessToken');
+      // const authToken = localStorage.getItem('accessToken');
+      const authToken = typeof localStorage !== 'undefined' ? localStorage.getItem('accessToken') : null;
+
 
       if (!authToken) {
         console.error('Bearer token not found in localStorage');
@@ -105,7 +108,8 @@ const TableNameModel: React.FC<ModalProps> = ({ visible, tableName, tableId, onC
   const handleSubmit = async (tableId: number) => {
     try {
       setIsModalVisible(false);
-      const authToken = localStorage.getItem('accessToken');
+      // const authToken = localStorage.getItem('accessToken');
+      const authToken = typeof localStorage !== 'undefined' ? localStorage.getItem('accessToken') : null;
 
       if (!authToken) {
         console.error('Bearer token not found in localStorage');
