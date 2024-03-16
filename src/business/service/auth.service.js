@@ -50,7 +50,8 @@ import getAuthHeader from './auth-header';
 
 const register = async (userData) => {
   try {
-    const response = await api.post('/api/register', userData, { headers: getAuthHeader() });
+    const response = await api.post('/api/register', userData, { });
+    // const response = await api.post('/api/register', userData, { headers: getAuthHeader() });
     return response.data;
   } catch (error) {
     throw new Error('Registration failed.');
