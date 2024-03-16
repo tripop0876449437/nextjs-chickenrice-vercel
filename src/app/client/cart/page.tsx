@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { Button, Modal, Spin } from 'antd'
-import OrderMenuModalClient from '@/common/components/elements/modals/orderMenuClient';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 
@@ -60,8 +59,7 @@ const CartPage = () => {
         orderTotalPrice: orderPriceTotal,
         tablename: tableNameClient
       }
-      const response = await axios.post(`${BASE_URL_API}/api/order-total/add`, orderTotalPayload)
-      console.log('handleSubmitModal', response.data);
+      await axios.post(`${BASE_URL_API}/api/order-total/add`, orderTotalPayload)
     } catch (error) {
       console.error('Error Submit Api Post OrderProduct.', error)
     }

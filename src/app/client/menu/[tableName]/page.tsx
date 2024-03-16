@@ -4,19 +4,14 @@ import { Button, Input, Modal, Spin } from 'antd';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react'
 import MenuSelectButtonClient from '@/common/components/elements/buttons/menubuttonClient';
-import InStoreTableListClient from '@/common/components/elements/bodyContent/InStoreTableListClient';
 import axios from 'axios';
-import MenuListClient from '@/common/components/elements/buttons/menuListClient';
-import MenuDiscriptionModelClient from '@/common/components/elements/modals/menuDiscriptionModalClient';
 import { useRouter } from 'next/navigation';
 
 const BASE_URL_API = process.env.NEXT_PUBLIC_BASE_URL_API;
-const CLIENT_URL = process.env.NEXT_PUBLIC_CLIENT_URL;
 
 const Menu = ({ params, }: { params: { tableName: string } }) => {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
-  const [selectMenu, setSelectMenu] = useState<string>("เมนูทั้งหมด")
   const [searchValue, setSearchValue] = useState<string>('');
 
   // Category
@@ -45,12 +40,9 @@ const Menu = ({ params, }: { params: { tableName: string } }) => {
       try {
         setLoading(true);
         const response = await axios.post(`${BASE_URL_API}/api/category`, {});
-
-        console.log('Categories response:', response.data);
         setCategoriesData(response.data);
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching categories:', error);
         setLoading(false);
       }
     };
@@ -59,18 +51,15 @@ const Menu = ({ params, }: { params: { tableName: string } }) => {
     const fetchSearchMenu = async () => {
       try {
         setLoading(true);
-        console.log('selectMenuCategory', selectMenuCategory);
         let response;
         if (selectMenuCategory === 'เมนูทั้งหมด') {
           response = await axios.post(`${BASE_URL_API}/api/product/search?pageSize=100&searchTerm=${searchQuery}&categoryName=`, {});
         } else {
           response = await axios.post(`${BASE_URL_API}/api/product/search?pageSize=100&searchTerm=${searchQuery}&categoryName=${selectMenuCategory}`, {});
         }
-        console.log('SearchResults', response.data);
         setSearchResults(response.data);
         setLoading(false);
       } catch (error) {
-        console.error('Error searching:', error);
         setLoading(false);
       }
     };
@@ -82,19 +71,15 @@ const Menu = ({ params, }: { params: { tableName: string } }) => {
         setOrderQuantityTotal(response.data[0].orderTotal.ordertotalquantity);
         setLoading(false);
       } catch (error) {
-        console.error("Error fetchOrderTotal:", error);
         setLoading(false);
       }
     }
 
     fetchCategories();
-    console.log('------------------');
     fetchSearchMenu();
     if (searchQuery.trim() !== '') {
       fetchSearchMenu();
     }
-    console.log('------------------');
-    console.log('SearchResults useEffect:', searchResults);
     fetchOrderTotal();
 
 
@@ -102,14 +87,9 @@ const Menu = ({ params, }: { params: { tableName: string } }) => {
 
 
   const handlerMenuCategory = (menuText: string, id: number = 0) => {
-    console.log('handlerMenuCategory: ', menuText);
-    console.log('handlerMenuCategoryId: ', id);
-
     setSelectMenuCategory(menuText)
     setSelectMenuCategoryId(id)
   }
-  console.log('selectMenuCategory', selectMenuCategory);
-  console.log('selectMenuCategoryId', selectMenuCategoryId);
 
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -122,7 +102,6 @@ const Menu = ({ params, }: { params: { tableName: string } }) => {
   // }
 
   const renderCategoryButtons = () => {
-    // console.log('categoriesData: ', categoriesData);
     if (!categoriesData || !categoriesData.categories || !Array.isArray(categoriesData.categories)) {
       // Handle the case where categoriesData or categoriesData.categories is undefined or not an array
       return null;
@@ -161,7 +140,6 @@ const Menu = ({ params, }: { params: { tableName: string } }) => {
 
   const [selectListMenuClient, setSelectListMenuClient] = useState<string>("");
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-  const [selectedTableName, setSelectedTableName] = useState<string>("");
 
   const handlerMenu = (textMenu: string) => {
     setSearchValue(textMenu);
@@ -181,8 +159,6 @@ const Menu = ({ params, }: { params: { tableName: string } }) => {
   const buttonStyle: React.CSSProperties = {
     cursor: 'pointer',
     padding: '16px',
-    // backgroundColor: isActive ? '#A93F3F' : (isHovered ? '#A93F3F' : 'transparent'), // Background color changes on hover
-    // color: isActive ? '#FDD77D' :  (isHovered ? '#FDD77D' : 'black'),
   };
 
   const [count, setCount] = useState(0);
@@ -190,18 +166,14 @@ const Menu = ({ params, }: { params: { tableName: string } }) => {
 
   const addOrderMenu = async (productId: number) => {
     handleCloseModal();
-    console.log('productId', productId);
-
     const orderResponse = {
       customerName: decodeURI(params.tableName),
       orderProductQuantity: count,
       orderProductPrice: total
     }
-    console.log('orderResponse: ', orderResponse);
 
     // api post order
-    const response = await axios.post(`${BASE_URL_API}/api/order/add/${productId}`, orderResponse)
-    console.log('response api order add: ', response.data);
+    await axios.post(`${BASE_URL_API}/api/order/add/${productId}`, orderResponse)
   }
 
 
@@ -273,7 +245,6 @@ const Menu = ({ params, }: { params: { tableName: string } }) => {
               return menuItem.category.name === selectMenuCategory; // Show menu items of the selected category
             }
           }).map((menuItem: { imageUrl: string; productName: string }, index: number) => (
-            // <MenuListClient key={index} onClick={() => handlerMenu(menuItem.productName)} imgFile={`${BASE_URL_API}${menuItem.imageUrl}`} menuText={menuItem.productName} />
             <div
               className={`border-2 border-[#A93F3F] flex flex-col items-center justify-center`}
               onMouseEnter={() => setIsHovered(true)}
@@ -291,7 +262,6 @@ const Menu = ({ params, }: { params: { tableName: string } }) => {
 
         {/* Modal */}
         {searchResults.products?.map((menuItem: { imageUrl: string; productName: string; price: number; id: number }, index: number) => (
-          // <MenuDiscriptionModelClient key={index} visible={isModalVisible} menuName={menuItem.productName} price={200} quatity={4} total={59} imgFile='/ข้าวมันไก่ต้ม.jpg' onClose={handleCloseModal} />
           <>
             <Modal
               closeIcon={false}

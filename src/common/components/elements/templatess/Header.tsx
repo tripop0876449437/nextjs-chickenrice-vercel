@@ -2,20 +2,13 @@
 import Image from "next/image";
 import React, { useEffect, useMemo, useState } from "react";
 import OrderAddressButton from "../buttons/orderAddressButton";
-import InStoreTableList from "../bodyContent/InStoreTableList";
-import CurrentOrder from "../bodyContent/CurrentOrder";
-import BackStoreList from "../bodyContent/BackStoreList";
 import { logout } from '@/business/service/auth.service';
 import jwt from 'jsonwebtoken';
-import InStoreList from "../bodyContent/InStoreList";
 import TableButton from "../buttons/tableButton";
 import axios from "axios";
 import { Button, Form, Input, Menu, Modal, Pagination, QRCode, Space, message } from "antd";
 import StatusTableNameModel from "../buttons/statusTableButton";
 import MenuselectbuttonProp from "../buttons/Menubutton";
-import AddCategoryModal from "../modals/AddCategoryModal";
-import MenuDiscriptionModel from "../modals/MenuDiscriptionModal";
-import AddMenuModal from "../modals/AddMenuModal";
 import ButtonConfirm from "../buttons/buttonConfirm";
 import OrderMenuModal from "../modals/orderMenu";
 import SubMenu from "antd/es/menu/SubMenu";
@@ -31,6 +24,55 @@ const getBase64 = (file: File) => {
     reader.onerror = error => reject(error);
   });
 };
+
+// Function to handle token refresh
+async function refreshTokenApi(refreshToken: string): Promise<string | null> {
+  try {
+      const response = await fetch(`${BASE_URL_API}/api/refreshToken`, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ refreshToken: refreshToken }),
+      });
+
+      if (response.ok) {
+          const data = await response.json();
+          return data.accessToken;
+      } else {
+          console.error('Failed to refresh token:', response.status);
+          return null;
+      }
+  } catch (error) {
+      console.error('Error refreshing token:', error);
+      return null;
+  }
+}
+
+// Function to schedule token refresh
+function scheduleTokenRefresh(refreshToken: string) {
+  const refreshInterval = 60 * 60 * 1000; // Refresh every hour (in milliseconds)
+
+  const refresh = async () => {
+      try {
+          const accessToken = await refreshTokenApi(refreshToken);
+          if (accessToken) {
+              localStorage.setItem('accessToken', accessToken);
+              console.log('Access token refreshed:', accessToken);
+          } else {
+              console.error('Failed to refresh access token');
+          }
+      } catch (error) {
+          console.error('Error refreshing access token:', error);
+      } finally {
+          // Schedule next refresh
+          setTimeout(refresh, refreshInterval);
+      }
+  };
+
+  // Initial call to start the refresh cycle
+  refresh();
+}
 
 export const Header = () => {
   const [selectMenu, setSelectMenu] = useState<string>("หน้าร้าน")
@@ -72,11 +114,6 @@ export const Header = () => {
   const [orderProductData, setOrderProductData] = useState<any>({});
   const [orderQuantityTotal, setOrderQuantityTotal] = useState<number>(0)
   const [orderPriceTotal, setOrderPriceTotal] = useState<number>(0)
-
-
-  // const [fetchDataEnabled, setFetchDataEnabled] = useState(true);
-  // const [fetchCategoriesEnabled, setFetchCategoriesEnabled] = useState(true);
-  // const [fetchSearchMenuEnabled, setFetchSearchMenuEnabled] = useState(true);
 
   // useEffect to monitor changes in order status and open modal accordingly
   useEffect(() => {
@@ -232,7 +269,6 @@ export const Header = () => {
         }
 
         const data = await response.json();
-        // console.log('Categories response:', data);
         setCategoriesData(data);
       } catch (error) {
         console.error('Error fetching categories:', error);
@@ -243,7 +279,6 @@ export const Header = () => {
     const fetchSearchMenu = async () => {
       try {
         const authToken = localStorage.getItem('accessToken');
-
 
         if (!authToken) {
           console.error('Bearer token not found in localStorage');
@@ -257,7 +292,6 @@ export const Header = () => {
           },
         };
 
-        console.log('selectMenuCategory', selectMenuCategory);
         if (selectMenuCategory === 'เมนูทั้งหมด') {
           const response = await axios.post(`${BASE_URL_API}/api/product/search?page=${currentPageMenuList}&searchTerm=${searchQuery}&categoryName=`, {
           }, config);
@@ -269,7 +303,6 @@ export const Header = () => {
 
           setSearchResults(response.data);
         }
-        console.log('SearchResults', searchResults);
 
       } catch (error) {
         console.error('Error searching:', error);
@@ -278,7 +311,6 @@ export const Header = () => {
 
     const fetchOrderProductAndTotal = async () => {
       try {
-        console.log('searchValueCurrentOrder', searchValueCurrentOrder);
 
         const config = {
           method: "POST",
@@ -296,7 +328,6 @@ export const Header = () => {
         }
 
         const data = await response.json();
-        console.log('setOrderProductAndTotalData', data);
         setOrderProductAndTotalData(data);
       } catch (error) {
         console.error('Error fetching table data:', error);
@@ -321,7 +352,6 @@ export const Header = () => {
         }
 
         const data = await response.json();
-        console.log('setWorningOrderProductAndTotal', data);
         setWorningOrderProductAndTotalData(data);
         setWorningOrderProductAndTotal(true);
       } catch (error) {
@@ -340,17 +370,12 @@ export const Header = () => {
         const response = await axios.post(`${BASE_URL_API}/api/order-product/${tableNameModalOS}`);
         setOrderProductData(response.data);
         calculateTotals(response.data);
-        console.log('setOrderProductData', orderProductData);
-
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
         setLoading(false);
       }
     }
-
-    console.log('odalVisibleMenuDiscriptionModal', isModalVisibleMenuDiscriptionModal);
-
 
     if (selectMenu == "หน้าร้าน" && instoreOneTwo == "one") {
       fetchData();
@@ -384,6 +409,14 @@ export const Header = () => {
     logout();
   };
 
+  useEffect(() => {
+    const refreshTokenValue = localStorage.getItem('refreshToken');
+    if (refreshTokenValue) {
+      scheduleTokenRefresh(refreshTokenValue);
+    } else {
+      console.error('Refresh token not found');
+    }
+  }, []); // Empty dependency array to run the effect only once on mount
 
 
 
@@ -397,6 +430,9 @@ export const Header = () => {
   const [isModalVisibleConfirmSuccess, setIsModalVisibleConfirmSuccess] = useState<boolean>(false);
   const [tableData, setTableData] = useState<any>({});
   const [loading, setLoading] = useState<boolean>(true);
+
+  const [count, setCount] = useState<number>(0);
+  const [total, setTotal] = useState<number>(0);
 
 
   const handleOpenModal = (tableId: number, tableName: string) => {
@@ -440,13 +476,15 @@ export const Header = () => {
         console.error('Bearer token not found in localStorage');
         return;
       }
+      console.log(count, total);
+      console.log(orderQuantityTotal, orderPriceTotal);
+
       const orderTotalPayload = {
-        orderTotalQuantity: count,
-        orderTotalPrice: total,
+        orderTotalQuantity: orderQuantityTotal,
+        orderTotalPrice: orderPriceTotal,
         tablename: tableNameModalOS
       }
-      const response = await axios.post(`${BASE_URL_API}/api/order-total/add`, orderTotalPayload)
-      console.log('handleSubmitModal', response.data);
+      await axios.post(`${BASE_URL_API}/api/order-total/add`, orderTotalPayload)
       setIsModalVisibleConfirmSuccess(true);
     } catch (error) {
       console.error('Error Submit Api Post OrderProduct.', error)
@@ -703,18 +741,9 @@ export const Header = () => {
 
 
   const handlerMenuCategory = (menuText: string, id: number = 0) => {
-    console.log('handlerMenuCategory: ', menuText);
-    console.log('handlerMenuCategoryId: ', id);
-
     setSelectMenuCategory(menuText)
     setSelectMenuCategoryId(id)
   }
-  console.log('selectMenuCategory', selectMenuCategory);
-  console.log('selectMenuCategoryId', selectMenuCategoryId);
-
-  const [searchValue, setSearchValue] = useState<string>('');
-  // const [currentPage, setCurrentPage] = useState<number>(1);
-  const pageSize = 4; // Number of items per page
 
   const handleChangeSearchMenuBar = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -781,17 +810,16 @@ export const Header = () => {
     setCount(0);
     setTotal(0);
   }
+  const handleCloseModalMenuListNextToListCart = () => {
+    setIsModalVisibleTableMenuList(false);
+  }
   const handleCloseModalMenuListAddCart = () => {
     setIsModalVisibleMenuDiscriptionModal(false);
   }
 
   // Pagination
   const onPageChange = (page: number) => {
-    console.log('onPageChange', page);
-
     setCurrentPageMenuList(page);
-    console.log('currentPageMenuList', currentPageMenuList);
-
   };
 
   const [isVisibleAddButtonMenu, setIsVisibleAddButtonMenu] = useState(false);
@@ -815,21 +843,11 @@ export const Header = () => {
   // const [imageUploaded, setImageUploaded] = useState(false); // State to track whether an image has been uploaded
 
   const onFinish = (values: any) => {
-    console.log('Form values:', values);
     handleAddButtonCategoryClose();
   };
 
   const [isModalVisibleMenu, setIsModalVisibleMenu] = useState<boolean>(false);
   const [categoryName, setCategoryName] = useState<string>('');
-
-  const showModalMenu = () => {
-    setIsModalVisibleMenu(true);
-  };
-
-  const handleCancelMenu = () => {
-    setIsModalVisibleMenu(false);
-
-  };
 
   const handleSubmitMenu = async (cateName: string) => {
     setIsModalVisibleMenu(false);
@@ -880,15 +898,11 @@ export const Header = () => {
 
 
   // MenuDiscriptionModal
-  const [count, setCount] = useState<number>(0);
-  const [total, setTotal] = useState<number>(0)
-
   const handleCloseModalMenuDiscriptionModal = () => {
     setIsModalVisibleMenuDiscriptionModal(false);
   };
 
   const handlerMenuMenuDiscriptionModal = async (productId: number) => {
-    console.log('productId', productId);
     const tableNameModalOS = localStorage.getItem('tableNameModalOutStore');
     if (!tableNameModalOS) {
       console.error('Bearer token not found in localStorage');
@@ -900,13 +914,13 @@ export const Header = () => {
       orderProductQuantity: count,
       orderProductPrice: total
     }
-    console.log('orderResponse: ', orderResponse);
 
     // api post order
-    const response = await axios.post(`${BASE_URL_API}/api/order/add/${productId}`, orderResponse)
-    console.log('response api order add: ', response.data);
-    handleCloseModalMenuList();
+    await axios.post(`${BASE_URL_API}/api/order/add/${productId}`, orderResponse)
+    handleCloseModalMenuListNextToListCart();
     setIsModalVisibleMenuDiscriptionModal(true);
+    setCount(0);
+    setTotal(0);
   }
 
   // Function to increment the count
@@ -932,7 +946,6 @@ export const Header = () => {
 
   const deleteOrderProduct = async (id: number) => {
     try {
-      console.log('id: ', id);
       await axios.delete(`${BASE_URL_API}/api/order-product/delete/${id}`)
       // window.location.reload();
 
@@ -947,7 +960,6 @@ export const Header = () => {
 
 
   const renderCategoryButtons = () => {
-    // console.log('categoriesData: ', categoriesData);
     if (!categoriesData || !categoriesData.categories || !Array.isArray(categoriesData.categories)) {
       // Handle the case where categoriesData or categoriesData.categories is undefined or not an array
       return null;
@@ -1018,9 +1030,6 @@ export const Header = () => {
       formDataObj.append('category_id', String(selectMenuCategoryId));
       formDataObj.append('image', formData.image || ''); // You might need to adjust this based on how you handle file uploads
 
-      console.log("formData", formData.productName);
-      console.log("formDataObj", formDataObj);
-
       const config = {
         headers: {
           'Authorization': `Bearer ${authToken}`,
@@ -1028,8 +1037,7 @@ export const Header = () => {
         },
       };
 
-      const response = await axios.post(`${BASE_URL_API}/api/product/add`, formDataObj, config);
-      console.log('Menu added successfully:', response.data);
+      await axios.post(`${BASE_URL_API}/api/product/add`, formDataObj, config);
       message.success('Menu added successfully');
       handleAddButtonMenuClose();
       setLoadingProduct(true);
@@ -1097,20 +1105,12 @@ export const Header = () => {
 
   const [isModalVisibleProduct, setIsModalVisibleProduct] = useState<boolean>(false);
 
-  const showModal = () => {
-    setIsModalVisibleProduct(true);
-  };
-
   const handleCancelProduct = () => {
     setIsModalVisibleProduct(false);
-    // console.log('handleCancel');
-
   };
 
   const handleSubmitProduct = async () => {
     setIsModalVisibleProduct(false);
-    console.log('formProduct: ', formProduct);
-
     try {
       // Submit the form data
       await formProduct.submit();
@@ -1141,7 +1141,6 @@ export const Header = () => {
   const handleChangeCurrentOrder = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     setSearchValueCurrentOrder(value);
-    console.log(value); // Log the value of the input search field
   };
 
   // Use the searchValueCurrentOrder state to filter the visibleMenuItems
@@ -1155,6 +1154,11 @@ export const Header = () => {
       menuItem.tableName.toLowerCase().includes(searchValueCurrentOrder.toLowerCase())
     );
   }, [visibleMenuItems, searchValueCurrentOrder]);
+
+  // Calculate the total order price
+  const totalOrderPrice = (filteredMenuItems || []).reduce((total: number, menuItem: any) => {
+    return total + menuItem.orderTotalPrice;
+  }, 0);
 
   const onClick = (e: any) => {
     // console.log('click ', e);
@@ -1181,7 +1185,6 @@ export const Header = () => {
           status: "doing"
         })
       };
-      console.log(config);
 
       const response = await fetch(`${BASE_URL_API}/api/order-total/update/${tablename}`, config)
       if (!response.ok) {
@@ -1210,6 +1213,8 @@ export const Header = () => {
       setWorningOrderProductAndTotal(false)
     }
   };
+
+  const lastOrderId = worningOrderProductAndTotalData.orderTotals?.[worningOrderProductAndTotalData.orderTotals.length - 1]?.id;
 
 
 
@@ -1722,71 +1727,6 @@ export const Header = () => {
                       <div className="flex justify-end mt-[16px]">
                         <Pagination current={searchResults.current_page} pageSize={searchResults.page_size} total={searchResults.total} onChange={onPageChange} style={{ textAlign: 'center', color: 'red', borderColor: 'red' }} className="custom-pagination" />
                       </div>
-
-                      {/* Map through searchResults.products and render MenuDiscriptionModel */}
-                      {/* {searchResults.products?.map((menuItem: { imageUrl: string; productName: string; price: number }, index: number) => (
-                        <>
-                          <Modal
-                            key={index}
-                            closeIcon={false}
-                            open={isModalVisibleTableMenuList && selectListMenu === menuItem.productName}
-                            onCancel={handleCloseModalMenuList}
-                            footer={null}
-                            centered
-                            width={500}
-                            style={{ padding: 0 }}
-                            className="no-border-radius-modal"
-                          >
-                            <div className='text-center'>
-                              <div className="flex justify-center items-center">
-                                <img src={`${BASE_URL_API}${menuItem.imageUrl}`} alt="" width={440} height={165.3} className='max-w-[400px] max-h-[400px]' />
-                              </div>
-                              <div className='h-[30px]'></div>
-                              <p className='font-bold text-[18px] text-start'>{menuItem.productName}</p>
-                              <div className='h-[16px]'></div>
-                              <div className='flex'>
-                                <div className="w-[50%] text-start text-[18px] font-bold"><span>ราคา</span></div>
-                                <div className="w-[50%] text-start text-[18px]"><span>{menuItem.price}</span></div>
-                              </div>
-                              <div className='h-[16px]'></div>
-                              <div className='flex'>
-                                <div className="w-[50%] text-start text-[18px] font-bold"><span>จำนวน</span></div>
-                                <div className="w-[50%] text-start flex">
-                                  <div className="cursor-pointer border border-[#000] w-[24px] text-center" onClick={() => decrementCount(menuItem.price)}>-</div>
-                                  <div className="border border-[#000] w-[100%] flex justify-center items-center"><span>{count}</span></div>
-                                  <div className="cursor-pointer border border-[#000] w-[24px] text-center" onClick={() => incrementCount(menuItem.price)}>+</div>
-                                </div>
-                              </div>
-                              <div className='h-[16px]'></div>
-                              <div className='flex'>
-                                <div className="w-[50%] text-start text-[18px] font-bold"><span>รวมเงิน</span></div>
-                                <div className="w-[50%] text-center text-[18px] border border-[#000]"><span>{total}</span></div>
-                              </div>
-                              <div style={{ height: '30px' }}></div>
-                              <div className="flex justify-center">
-                                <Button
-                                  key="confirm"
-                                  style={{
-                                    height: '42px',
-                                    padding: '10px',
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    border: '1px solid #00BE2A',
-                                    borderRadius: '0',
-                                    transition: 'background-color 0.3s ease', // Add transition for smooth hover effect
-                                  }}
-                                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgb(240 253 244)'}
-                                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#fff'}
-                                >
-                                  <span style={{ fontSize: '18px', fontWeight: 'bold', color: '#00BE2A' }}>เพิ่มลงตะกร้า</span>
-                                </Button>
-                              </div>
-                            </div>
-                          </Modal>
-                          {isModalVisible === true && <OrderMenuModal visible={isModalVisible} menuName='ข้าวมันไก่ต้มธรรมดา' quatity={4} onClose={() => handleCloseModal()} />}
-                        </>
-                      ))} */}
                     </div>
                   </div>
                 </div>
@@ -2232,7 +2172,7 @@ export const Header = () => {
               <div>
                 {/* Search input */}
                 <div className="flex justify-center items-center py-[16px]">
-                  <div className="w-[200px] h-[30px] border-2 border-[#A93F3F] rounded-none flex justify-center items-center"><span>วันนี้</span></div>
+                  <div className="w-[200px] h-[30px] border-2 border-[#A93F3F] rounded-none flex justify-center items-center"><span>ออร์เดอร์ทั้งหมด</span></div>
                   <div className="w-[30px]"></div>
                   <div className="w-full">
                     <Input
@@ -2269,15 +2209,15 @@ export const Header = () => {
                           style={{ background: '#FDD77D', padding: 0, margin: 0 }}
                           className="custom-submenu"
                         >
-                          <div className="w-full h-[130px] bg-white border-[#A93F3F] border-t-[2px] pt-[26px] pb-[16px] px-[16px] grid grid-cols-1 gap-4">
+                          <div className="w-full min-h-[130px] bg-white border-[#A93F3F] border-t-[2px] pt-[16px] pb-[16px] px-[16px] grid grid-cols-1 gap-4">
                             {menuItem.orderProducts.map((subMenuItem: any, subIndex: any) => (
-                              <div key={subIndex} className="w-full grid grid-cols-7">
+                              <div key={subIndex} className="w-full grid grid-cols-7 mt-[10px]">
                                 <div className='flex justify-start items-center text-[18px] text-[#A93F3F] col-start-1 col-span-3'><p>{subMenuItem.productName}</p></div>
                                 <div className='flex justify-center items-center text-[18px] text-[#A93F3F] col-span-1'><p>{subMenuItem.orderProductQuantity}</p></div>
                                 <div className='flex justify-end items-center text-[18px] text-[#A93F3F] col-span-3'><p>{subMenuItem.orderProductPrice}</p></div>
                               </div>
                             ))}
-                            <div className="w-full grid grid-cols-7">
+                            <div className="w-full grid grid-cols-7 mt-[10px] mb-[10px]">
                               <div className='flex justify-center items-center text-[18px] text-[#A93F3F] col-start-1 col-span-3'><p>รวมทั้งสิ้น</p></div>
                               <div className='flex justify-center items-center text-[18px] text-[#A93F3F] col-span-1'><p>{menuItem.orderTotalQuantity}</p></div>
                               <div className='flex justify-end items-center text-[18px] text-[#A93F3F] col-span-3'><p>{menuItem.orderTotalPrice}</p></div>
@@ -2288,8 +2228,9 @@ export const Header = () => {
                     ))}
                   </div>
                   {/* Total */}
-                  <div className="h-[38px] bg-[#A93F3F] flex items-center p-2">
+                  <div className="h-[38px] bg-[#A93F3F] flex justify-between items-center p-2">
                     <span className='text-[18px] font-bold text-[#FDD77D]'>ยอดรวม</span>
+                    <span className='text-[18px] font-bold text-[#FDD77D]'>{totalOrderPrice} บาท</span>
                   </div>
                   {/* Pagination */}
                   <div className="flex justify-end mt-[16px]">
@@ -2306,9 +2247,6 @@ export const Header = () => {
               </div>
             </>
           }
-
-          {/* InStoreList */}
-          {/* {isModalVisible === true && <InStoreList />} */}
         </div>
 
         {worningOrderProductAndTotalData.orderTotals?.map((order: any) => (
@@ -2395,42 +2333,40 @@ export const Header = () => {
                 </div>
               </div>
             </Modal>
-            <Modal
-              closeIcon={false}
-              open={worningOrderProductAndTotalConfirmShow}
-              onCancel={() => setWorningOrderProductAndTotalConfirmShow(false)}
-              footer={null}
-              centered
-              width={500}
-              style={{ padding: 0 }}
-              className="no-border-radius-modal"
-            >
-              <div className="text-center">
-                <p className='font-bold text-[40px]'>ออร์เดอร์{order.tableName}</p>
-                <div className="h-[25px]"></div>
-                <div className="border-[#000] border-y-2 px-[32px] py-[16px] grid gap-4">
-                  {/* Order List */}
-                  {order.orderProducts.map((product: any) => (
-                    <div className="flex justify-start" key={product.id}>
-                      <div className="max-w-[25px] w-[25px] text-start text-[16px]"><span>{product.orderProductQuantity}</span></div>
-                      <div className="text-[16px]"><span>{product.productName}</span></div>
-                    </div>
-                  ))}
-                </div>
-                {/* Total */}
-                <div className="flex justify-between text-[18px] mt-[25px]">
-                  <span>รวมทั้งสิ้น</span>
-                  {/* <span>{order.orderTotalQuantity}</span>
-                    <span>{order.orderTotalPrice}บาท</span> */}
-                  <span>{orderQuantityTotal}</span>
-                  <span>{orderPriceTotal}บาท</span>
-                </div>
-              </div>
-            </Modal>
           </>
         ))}
 
-
+        <Modal
+          key={lastOrderId}
+          closeIcon={false}
+          open={worningOrderProductAndTotalConfirmShow}
+          onCancel={() => setWorningOrderProductAndTotalConfirmShow(false)}
+          footer={null}
+          centered
+          width={500}
+          style={{ padding: 0 }}
+          className="no-border-radius-modal"
+        >
+          <div className="text-center">
+            <p className='font-bold text-[40px]'>ออร์เดอร์ {worningOrderProductAndTotalData.orderTotals?.[worningOrderProductAndTotalData.orderTotals.length - 1]?.tableName}</p>
+            <div className="h-[25px]"></div>
+            <div className="border-[#000] border-y-2 px-[32px] py-[16px] grid gap-4">
+              {/* Order List */}
+              {worningOrderProductAndTotalData.orderTotals?.[worningOrderProductAndTotalData.orderTotals.length - 1]?.orderProducts.map((product: any) => (
+                <div className="flex justify-start" key={product.id}>
+                  <div className="max-w-[25px] w-[25px] text-start text-[16px]">{product.orderProductQuantity}</div>
+                  <div className="text-[16px]">{product.productName}</div>
+                </div>
+              ))}
+            </div>
+            {/* Total */}
+            <div className="flex justify-between text-[18px] mt-[25px]">
+              <span>รวมทั้งสิ้น</span>
+              <span>{orderQuantityTotal}</span>
+              <span>{orderPriceTotal} บาท</span>
+            </div>
+          </div>
+        </Modal>
       </>
     </main>
   );
