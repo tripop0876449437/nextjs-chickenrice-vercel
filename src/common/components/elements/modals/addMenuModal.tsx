@@ -52,8 +52,8 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({ visible, menuName, category
   const onFinish = async () => {
     try {
       setLoading(true);
-      const authToken = localStorage.getItem('accessToken');
-      // const authToken = typeof localStorage !== 'undefined' ? localStorage.getItem('accessToken') : null;
+      // const authToken = localStorage.getItem('accessToken');
+      const authToken = typeof localStorage !== 'undefined' ? localStorage.getItem('accessToken') : null;
       if (!authToken) {
         console.error('Bearer token not found in localStorage');
         return;
