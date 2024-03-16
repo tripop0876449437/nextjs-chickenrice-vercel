@@ -188,7 +188,7 @@ const TableMenuList = () => {
         >
           <span className="text-[#A93F3F] text-[40px] font-bold">+</span>
         </div>
-        <AddMenuModal visible={isVisibleAddButtonMenu} menuName={'ข้าวมันไก่ต้ม'} onClose={handleAddButtonMenuClose} />
+        {/* <AddMenuModal visible={isVisibleAddButtonMenu} menuName={'ข้าวมันไก่ต้ม'} onClose={handleAddButtonMenuClose} /> */}
       </div>
       {visibleMenuItems.map((menuItem, index) => (
         <MenuDiscriptionModel key={index} visible={isModalVisible} menuName={'ข้าวมันไก่ต้ม'} price={400} quatity={8} total={400} imgFile={menuItem.image} onClose={handleCloseModal} />
