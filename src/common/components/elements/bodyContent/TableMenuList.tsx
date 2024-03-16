@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import Image from 'next/image'
 import MenuDiscriptionModel from '../modals/MenuDiscriptionModal'
 import { Pagination } from 'antd';
-import AddMenuModal from '../modals/AddMenuModal';
+// import AddMenuModal from '../modals/AddMenuModal';
 
 const TableMenuList = () => {
   const [selectListMenu, setSelectListMenu] = useState<string>("");
