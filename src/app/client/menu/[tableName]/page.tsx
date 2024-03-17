@@ -253,7 +253,7 @@ const Menu = ({ params, }: { params: { tableName: string } }) => {
               onClick={() => handlerMenu(menuItem.productName)}
               key={index}
             >
-              <img src={`${BASE_URL_API}${menuItem.imageUrl}`} alt="" width={165} height={105} />
+              <img src={`${menuItem.imageUrl}`} alt="" width={165} height={105} />
               <p className="text-[16px] font-bold mt-[16px] text-[#A93F3F]">{menuItem.productName}</p>
             </div>
           ))}
@@ -276,7 +276,7 @@ const Menu = ({ params, }: { params: { tableName: string } }) => {
             >
               <div className='text-center'>
                 <div className="flex justify-center items-center">
-                  <img src={`${BASE_URL_API}${menuItem.imageUrl}`} alt="" width={240} height={165.3} className='max-w-[465.3pxpx] max-h-[465.3pxpx]' />
+                  <img src={`${menuItem.imageUrl}`} alt="" width={240} height={165.3} className='max-w-[465.3pxpx] max-h-[465.3pxpx]' />
                 </div>
                 <div className='h-[30px]'></div>
                 <p className='font-bold text-[18px] text-start'>{menuItem.productName}</p>

@@ -297,14 +297,11 @@ export const Header = () => {
           }, config);
 
           setSearchResults(response.data);
-          console.log('response', response.data);
-          
         } else {
           const response = await axios.post(`${BASE_URL_API}/api/product/search?page=${currentPageMenuList}&searchTerm=${searchQuery}&categoryName=${selectMenuCategory}`, {
           }, config);
 
           setSearchResults(response.data);
-          console.log('response', response.data);
         }
 
       } catch (error) {
