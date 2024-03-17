@@ -1,13 +1,8 @@
 {
   "version": 2,
-  "builds": [
-    { "src": "package.json", "use": "@vercel/node" },
-    { "src": "public/**/*", "use": "@vercel/static" },
-    { "src": "package.json", "use": "@vercel/next" }
-  ],
   "routes": [
-    { "handle": "filesystem" },
-    { "src": "/app/client/menu/(.*)", "dest": "/app/client/menu/[tableName]/page.tsx" },
+    { "src": "/client/menu/(.*)", "dest": "/app/client/menu/$1/page.tsx" },
+    { "src": "/client/cart", "dest": "/app/client/cart/page.tsx" },
     { "src": "/(.*)", "dest": "/app$1" }
   ]
 }
