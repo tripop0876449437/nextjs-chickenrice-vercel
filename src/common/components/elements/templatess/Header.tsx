@@ -297,11 +297,14 @@ export const Header = () => {
           }, config);
 
           setSearchResults(response.data);
+          console.log('response', response.data);
+          
         } else {
           const response = await axios.post(`${BASE_URL_API}/api/product/search?page=${currentPageMenuList}&searchTerm=${searchQuery}&categoryName=${selectMenuCategory}`, {
           }, config);
 
           setSearchResults(response.data);
+          console.log('response', response.data);
         }
 
       } catch (error) {
@@ -1593,7 +1596,7 @@ export const Header = () => {
                         }).map((menuItem: { imageUrl: string; productName: string }, index: number) => (
                           <div key={index} className="border border-[#A93F3F] w-full h-[153px] justify-center cursor-pointer p-2" onClick={() => handlerMenuList(menuItem.productName)}>
                             <div className="h-[99px] bg-[#D9D9D9] flex justify-center">
-                              <img src={`${BASE_URL_API}${menuItem.imageUrl}`} alt="" className="object-contain max-w-full max-h-full" />
+                              <img src={`${menuItem.imageUrl}`} alt="" className="object-contain max-w-full max-h-full" />
                             </div>
                             <div className="flex items-center justify-start mt-4 text-[#A93F3F] text-[18px] font-bold">
                               {menuItem.productName}
@@ -1988,7 +1991,7 @@ export const Header = () => {
                         }).map((menuItem: { imageUrl: string; productName: string }, index: number) => (
                           <div key={index} className="border border-[#A93F3F] w-full h-[153px] justify-center cursor-pointer p-2" onClick={() => handlerMenuList(menuItem.productName)}>
                             <div className="h-[99px] bg-[#D9D9D9] flex justify-center">
-                              <img src={`${BASE_URL_API}${menuItem.imageUrl}`} alt="" className="object-contain max-w-full max-h-full" />
+                              <img src={`${menuItem.imageUrl}`} alt="" className="object-contain max-w-full max-h-full" />
                             </div>
                             <div className="flex items-center justify-start mt-4 text-[#A93F3F] text-[18px] font-bold">
                               {menuItem.productName}
@@ -2017,7 +2020,7 @@ export const Header = () => {
                           >
                             <div className='text-center'>
                               <div className="flex justify-center items-center">
-                                <img src={`${BASE_URL_API}${menuItem.imageUrl}`} alt="" width={440} height={165.3} className='max-w-[400px] max-h-[400px]' />
+                                <img src={`${menuItem.imageUrl}`} alt="" width={440} height={165.3} className='max-w-[400px] max-h-[400px]' />
                               </div>
                               <div className='h-[30px]'></div>
                               <p className='font-bold text-[18px] text-start'>{menuItem.productName}</p>
