@@ -7,7 +7,7 @@
   ],
   "routes": [
     { "handle": "filesystem" },
-    { "src": "/(.*)", "dest": "page.tsx" },
-    { "src": "/client/menu/(.*)", "dest": "/client/menu/[tableName]/page.tsx" }
+    { "src": "/client/menu/(.*)", "dest": "/client/menu/[tableName]/page.tsx" },
+    { "src": "/(.*)", "dest": "page.tsx" }
   ]
 }
