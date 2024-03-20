@@ -28,24 +28,24 @@ const getBase64 = (file: File) => {
 // Function to handle token refresh
 async function refreshTokenApi(refreshToken: string): Promise<string | null> {
   try {
-      const response = await fetch(`${BASE_URL_API}/api/refreshToken`, {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ refreshToken: refreshToken }),
-      });
+    const response = await fetch(`${BASE_URL_API}/api/refreshToken`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ refreshToken: refreshToken }),
+    });
 
-      if (response.ok) {
-          const data = await response.json();
-          return data.accessToken;
-      } else {
-          console.error('Failed to refresh token:', response.status);
-          return null;
-      }
-  } catch (error) {
-      console.error('Error refreshing token:', error);
+    if (response.ok) {
+      const data = await response.json();
+      return data.accessToken;
+    } else {
+      console.error('Failed to refresh token:', response.status);
       return null;
+    }
+  } catch (error) {
+    console.error('Error refreshing token:', error);
+    return null;
   }
 }
 
@@ -54,20 +54,20 @@ function scheduleTokenRefresh(refreshToken: string) {
   const refreshInterval = 60 * 60 * 1000; // Refresh every hour (in milliseconds)
 
   const refresh = async () => {
-      try {
-          const accessToken = await refreshTokenApi(refreshToken);
-          if (accessToken) {
-              localStorage.setItem('accessToken', accessToken);
-              console.log('Access token refreshed:', accessToken);
-          } else {
-              console.error('Failed to refresh access token');
-          }
-      } catch (error) {
-          console.error('Error refreshing access token:', error);
-      } finally {
-          // Schedule next refresh
-          setTimeout(refresh, refreshInterval);
+    try {
+      const accessToken = await refreshTokenApi(refreshToken);
+      if (accessToken) {
+        localStorage.setItem('accessToken', accessToken);
+        console.log('Access token refreshed:', accessToken);
+      } else {
+        console.error('Failed to refresh access token');
       }
+    } catch (error) {
+      console.error('Error refreshing access token:', error);
+    } finally {
+      // Schedule next refresh
+      setTimeout(refresh, refreshInterval);
+    }
   };
 
   // Initial call to start the refresh cycle
@@ -114,6 +114,10 @@ export const Header = () => {
   const [orderProductData, setOrderProductData] = useState<any>({});
   const [orderQuantityTotal, setOrderQuantityTotal] = useState<number>(0)
   const [orderPriceTotal, setOrderPriceTotal] = useState<number>(0)
+
+  const ActivateButton = 'กำลังใช้งาน';
+  const InactivateButton = 'ว่าง';
+  const DeleteButton = 'ลบโต๊ะ';
 
   // useEffect to monitor changes in order status and open modal accordingly
   useEffect(() => {
@@ -692,19 +696,21 @@ export const Header = () => {
     setSelectedActive(false);
   };
 
-  const handleSubmitToNewPage = (tableName: string) => {
+  const handleSubmitToNewPage = (tableName: string, selectedTableId: number) => {
     handleCloseModal();
     setTableNameModal(tableName);
     localStorage.setItem('instoreOneTwo', 'two');
     localStorage.setItem('tableNameModal', tableName);
+    localStorage.setItem('selectedTableIdInStore', String(selectedTableId));
     window.location.reload()
   };
 
-  const handleSubmitToNewPageOutStore = (tableName: string) => {
+  const handleSubmitToNewPageOutStore = (tableName: string, selectedTableId: number) => {
     handleCloseModal();
     setTableNameModalOutStore(tableName);
     localStorage.setItem('outstoreOneTwo', 'two');
     localStorage.setItem('tableNameModalOutStore', tableName);
+    localStorage.setItem('selectedTableIdOutStore', String(selectedTableId));
     window.location.reload()
   };
 
@@ -1218,6 +1224,31 @@ export const Header = () => {
   const lastOrderId = worningOrderProductAndTotalData.orderTotals?.[worningOrderProductAndTotalData.orderTotals.length - 1]?.id;
 
 
+  const handleCheckBillButtonInStore = () => {
+    const selectedTableIdInStoreValiable = localStorage.getItem('selectedTableIdInStore');
+
+    if (!selectedTableIdInStoreValiable) {
+      console.error('Bearer token not found in localStorage');
+      return;
+    }
+    setInstoreOneTwo('one');
+    localStorage.setItem('instoreOneTwo', 'one');
+    showModalInActive(selectedTableName, Number(selectedTableIdInStoreValiable));
+  }
+
+  const handleCheckBillButtonOutStore = () => {
+    const selectedTableIdOutStoreValiable = localStorage.getItem('selectedTableIdOutStore');
+
+    if (!selectedTableIdOutStoreValiable) {
+      console.error('Bearer token not found in localStorage');
+      return;
+    }
+    setOutstoreOneTwo('one');
+    localStorage.setItem('outstoreOneTwo', 'one');
+    showModalInActive(selectedTableName, Number(selectedTableIdOutStoreValiable));
+  }
+
+
 
   return (
     <main className="h-screen" style={{ padding: '80px' }}>
@@ -1291,16 +1322,16 @@ export const Header = () => {
                       </div>
                       <div style={{ height: '30px' }}></div>
                       {/* Render your StatusTableNameModel */}
-                      <StatusTableNameModel statusTableName='กำลังใช้งาน' onClick={() => showModalActive(selectedTableName, selectedTableId)} colorBg='#00BE2A' colorText='#FFF' />
+                      <StatusTableNameModel statusTableName={ActivateButton} onClick={() => showModalActive(selectedTableName, selectedTableId)} colorBg='#00BE2A' colorText='#FFF' />
                       <div style={{ height: '30px' }}></div>
-                      <StatusTableNameModel statusTableName='ว่าง' onClick={() => showModalInActive(selectedTableName, selectedTableId)} colorBg='#D9D9D9' colorText='#FFF' />
+                      <StatusTableNameModel statusTableName={InactivateButton} onClick={() => showModalInActive(selectedTableName, selectedTableId)} colorBg='#D9D9D9' colorText='#FFF' />
                       <div style={{ height: '30px' }}></div>
-                      <StatusTableNameModel statusTableName='ลบโต๊ะ' onClick={() => showModalDelete(selectedTableName, selectedTableId)} colorBg='#C60000' colorText='#FFF' />
+                      <StatusTableNameModel statusTableName={DeleteButton} onClick={() => showModalDelete(selectedTableName, selectedTableId)} colorBg='#C60000' colorText='#FFF' />
                       <div style={{ height: '30px' }}></div>
 
                       {/* Confirm Next to InStoreList */}
                       <Button
-                        key="confirm" onClick={() => handleSubmitToNewPage(selectedTableName)}
+                        key="confirm" onClick={() => handleSubmitToNewPage(selectedTableName, selectedTableId)}
                         style={{
                           width: '66px',
                           height: '42px',
@@ -1461,7 +1492,7 @@ export const Header = () => {
                         <span className="ml-2">พิมพ์ใบเสร็จ </span>
                       </div>
                     </div>
-                    <div className="mt-4 w-full h-[42px] bg-[#419453] justify-center items-center flex cursor-pointer">
+                    <div className="mt-4 w-full h-[42px] bg-[#419453] justify-center items-center flex cursor-pointer" onClick={handleCheckBillButtonInStore}>
                       <button className="flex-cols text-white font-bold">
                         CHECK BILL
                       </button>
@@ -1780,16 +1811,17 @@ export const Header = () => {
                       </div>
                       <div style={{ height: '30px' }}></div>
                       {/* Render your StatusTableNameModel */}
-                      <StatusTableNameModel statusTableName='กำลังใช้งาน' onClick={() => showModalActive(selectedTableName, selectedTableId)} colorBg='#00BE2A' colorText='#FFF' />
+                      <StatusTableNameModel statusTableName={ActivateButton} onClick={() => showModalActive(selectedTableName, selectedTableId)} colorBg='#00BE2A' colorText='#FFF' />
                       <div style={{ height: '30px' }}></div>
-                      <StatusTableNameModel statusTableName='ว่าง' onClick={() => showModalInActive(selectedTableName, selectedTableId)} colorBg='#D9D9D9' colorText='#FFF' />
+                      <StatusTableNameModel statusTableName={InactivateButton} onClick={() => showModalInActive(selectedTableName, selectedTableId)} colorBg='#D9D9D9' colorText='#FFF' />
                       <div style={{ height: '30px' }}></div>
-                      <StatusTableNameModel statusTableName='ลบโต๊ะ' onClick={() => showModalDelete(selectedTableName, selectedTableId)} colorBg='#C60000' colorText='#FFF' />
+                      <StatusTableNameModel statusTableName={DeleteButton} onClick={() => showModalDelete(selectedTableName, selectedTableId)} colorBg='#C60000' colorText='#FFF' />
                       <div style={{ height: '30px' }}></div>
 
                       {/* Confirm Next to InStoreList */}
+                      {/* {if ()} */}
                       <Button
-                        key="confirm" onClick={() => handleSubmitToNewPageOutStore(selectedTableName)}
+                        key="confirm" onClick={() => handleSubmitToNewPageOutStore(selectedTableName, selectedTableId)}
                         style={{
                           width: '66px',
                           height: '42px',
@@ -1950,7 +1982,7 @@ export const Header = () => {
                         <span className="ml-2">พิมพ์ใบเสร็จ </span>
                       </div>
                     </div>
-                    <div className="mt-4 w-full h-[42px] bg-[#419453] justify-center items-center flex cursor-pointer">
+                    <div className="mt-4 w-full h-[42px] bg-[#419453] justify-center items-center flex cursor-pointer" onClick={handleCheckBillButtonOutStore}>
                       <button className="flex-cols text-white font-bold">
                         CHECK BILL
                       </button>
