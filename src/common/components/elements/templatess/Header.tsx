@@ -2316,10 +2316,10 @@ export const Header = () => {
                   {/* Total */}
                   <div className="flex justify-between text-[18px] my-[30px]">
                     <span>รวมทั้งสิ้น</span>
-                    {/* <span>{order.orderTotalQuantity}</span>
-                    <span>{order.orderTotalPrice}บาท</span> */}
-                    <span>{orderQuantityTotal}</span>
-                    <span>{orderPriceTotal}บาท</span>
+                    <span>{order.orderTotalQuantity}</span>
+                    <span>{order.orderTotalPrice}บาท</span>
+                    {/* <span>{orderQuantityTotal}</span>
+                    <span>{orderPriceTotal}บาท</span> */}
                   </div>
                   {/* Button Footer */}
                   <div className='flex justify-center'>
@@ -2395,8 +2395,18 @@ export const Header = () => {
             {/* Total */}
             <div className="flex justify-between text-[18px] mt-[25px]">
               <span>รวมทั้งสิ้น</span>
-              <span>{orderQuantityTotal}</span>
-              <span>{orderPriceTotal} บาท</span>
+              {worningOrderProductAndTotalData.orderTotals && worningOrderProductAndTotalData.orderTotals.length > 0 && (
+                <div className="flex justify-center" key={worningOrderProductAndTotalData.orderTotals[worningOrderProductAndTotalData.orderTotals.length - 1].id}>
+                  <span>{worningOrderProductAndTotalData.orderTotals[worningOrderProductAndTotalData.orderTotals.length - 1].orderTotalQuantity}</span>
+                </div>
+              )}
+              {worningOrderProductAndTotalData.orderTotals && worningOrderProductAndTotalData.orderTotals.length > 0 && (
+                <div className="flex justify-center" key={worningOrderProductAndTotalData.orderTotals[worningOrderProductAndTotalData.orderTotals.length - 1].id}>
+                  <span>{worningOrderProductAndTotalData.orderTotals[worningOrderProductAndTotalData.orderTotals.length - 1].orderTotalPrice} บาท</span>
+                </div>
+              )}
+              {/* <span>{orderQuantityTotal}</span>
+              <span>{orderPriceTotal} บาท</span> */}
             </div>
           </div>
         </Modal>
