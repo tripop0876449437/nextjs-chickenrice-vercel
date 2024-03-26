@@ -2316,10 +2316,10 @@ export const Header = () => {
                   {/* Total */}
                   <div className="flex justify-between text-[18px] my-[30px]">
                     <span>รวมทั้งสิ้น</span>
-                    {/* <span>{order.orderTotalQuantity}</span>
-                    <span>{order.orderTotalPrice}บาท</span> */}
-                    <span>{orderQuantityTotal}</span>
-                    <span>{orderPriceTotal}บาท</span>
+                    <span>{order.orderTotalQuantity}</span>
+                    <span>{order.orderTotalPrice}บาท</span>
+                    {/* <span>{orderQuantityTotal}</span>
+                    <span>{orderPriceTotal}บาท</span> */}
                   </div>
                   {/* Button Footer */}
                   <div className='flex justify-center'>
