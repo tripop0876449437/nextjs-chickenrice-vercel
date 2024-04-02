@@ -12,6 +12,8 @@ import MenuselectbuttonProp from "../buttons/Menubutton";
 import ButtonConfirm from "../buttons/buttonConfirm";
 import OrderMenuModal from "../modals/orderMenu";
 import SubMenu from "antd/es/menu/SubMenu";
+import { DatePicker } from 'antd';
+import dayjs, { Dayjs } from "dayjs";
 
 const BASE_URL_API = process.env.NEXT_PUBLIC_BASE_URL_API;
 const CLIENT_URL = process.env.NEXT_PUBLIC_CLIENT_URL;
@@ -118,6 +120,10 @@ export const Header = () => {
   const ActivateButton = 'กำลังใช้งาน';
   const InactivateButton = 'ว่าง';
   const DeleteButton = 'ลบโต๊ะ';
+
+  const { RangePicker } = DatePicker;
+  const [selectedRange, setSelectedRange] = useState<[Dayjs | null, Dayjs | null]>([null, null]);
+  const dateFormat = 'YYYY-MM-DD';
 
   // useEffect to monitor changes in order status and open modal accordingly
   useEffect(() => {
@@ -315,14 +321,15 @@ export const Header = () => {
 
     const fetchOrderProductAndTotal = async () => {
       try {
-
         const config = {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            search: searchValueCurrentOrder
+            search: searchValueCurrentOrder,
+            startDate: selectedRange[0],
+            endDate: selectedRange[1]
           }),
         };
 
@@ -403,7 +410,16 @@ export const Header = () => {
 
     worningOrderProductAndTotal();
 
-  }, [instoreOneTwo, currentPage, tableNameModal, searchQuery, currentPageMenuList, selectMenuCategory, searchResults, orderProductAndTotalData, searchValueCurrentOrder, selectMenu, outstoreOneTwo, isModalVisibleMenuDiscriptionModal, tableNameModalOutStore, orderProductData]); // Empty dependency array to run the effect only once on mount
+  }, [instoreOneTwo, currentPage, tableNameModal, searchQuery, currentPageMenuList, selectMenuCategory, searchResults, orderProductAndTotalData, searchValueCurrentOrder, selectMenu, outstoreOneTwo, isModalVisibleMenuDiscriptionModal, tableNameModalOutStore, orderProductData, selectedRange]); // Empty dependency array to run the effect only once on mount
+
+  const handleRangeChange = (dates: [Dayjs | null, Dayjs | null], dateStrings: [string, string]) => {
+    const [startDateString, endDateString] = dateStrings;
+    setSelectedRange([
+      startDateString ? dayjs(startDateString) : null,
+      endDateString ? dayjs(endDateString) : null
+    ]);
+  };
+  
 
   const handlerMenu = (menuText: string) => {
     setSelectMenu(menuText)
@@ -1144,6 +1160,7 @@ export const Header = () => {
   const startIndex = (currentPageOrder - 1) * pageSizeCurrentOrder;
   const endIndex = Math.min(startIndex + pageSizeCurrentOrder, orderProductAndTotalData.orderTotals?.length);
   const visibleMenuItems = orderProductAndTotalData.orderTotals?.slice(startIndex, endIndex);
+  const totalMoneyAll = orderProductAndTotalData.totalMoneyAll;
 
   const handleChangeCurrentOrder = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -1162,10 +1179,16 @@ export const Header = () => {
     );
   }, [visibleMenuItems, searchValueCurrentOrder]);
 
+  // // Calculate the total order price
+  // const totalOrderPrice = (filteredMenuItems || []).reduce((total: number, menuItem: any) => {
+  //   return total + menuItem.orderTotalPrice;
+  // }, 0);
+  // // console.log(totalOrderPrice);
+
   // Calculate the total order price
-  const totalOrderPrice = (filteredMenuItems || []).reduce((total: number, menuItem: any) => {
-    return total + menuItem.orderTotalPrice;
-  }, 0);
+  const totalOrderPrice = (totalMoneyAll || '')
+  console.log(totalOrderPrice);
+  
 
   const onClick = (e: any) => {
     // console.log('click ', e);
@@ -2205,14 +2228,23 @@ export const Header = () => {
               <div>
                 {/* Search input */}
                 <div className="flex justify-center items-center py-[16px]">
-                  <div className="w-[200px] h-[30px] border-2 border-[#A93F3F] rounded-none flex justify-center items-center"><span>ออร์เดอร์ทั้งหมด</span></div>
+                  {/* <div className="w-[200px] h-[30px] border-2 border-[#A93F3F] rounded-none flex justify-center items-center"><span>ออร์เดอร์ทั้งหมด</span></div> */}
+                  {/* <div className="w-[400px] h-[30px] border-2 border-[#A93F3F] rounded-none flex justify-center items-center"> */}
+                    <RangePicker 
+                      style={{ border: '2px solid #A93F3F', borderRadius: 0 }} 
+                      className="h-[35px]"
+                      value={selectedRange}
+                      onChange={handleRangeChange}
+                      format={dateFormat}
+                    />
+                  {/* </div> */}
                   <div className="w-[30px]"></div>
                   <div className="w-full">
                     <Input
                       value={orderProductAndTotalData.orderTotals ? orderProductAndTotalData.orderTotals.tableName : ''}
                       placeholder="ค้นหาออร์เดอร์"
                       prefix={<Image src="/search.png" alt="search" width={16} height={16} className='ml-[6px]' />}
-                      className="h-[30px] pr-[16px] border-2 border-[#A93F3F] rounded-none"
+                      className="h-[35px] pr-[16px] border-2 border-[#A93F3F] rounded-none"
                       onChange={handleChangeCurrentOrder} // Add onChange event handler
                     />
                   </div>
